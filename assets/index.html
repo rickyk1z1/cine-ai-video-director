@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#15313f"><title>Cinematic · 分镜工作台</title>
+<link rel="stylesheet" href="/style.css"><script defer src="/style-atlas/app.js"></script><script defer src="/workspace.js"></script><script defer src="/app.js"></script>
+</head>
+<body>
+<a class="skip-link" href="#editor">跳到分镜内容</a>
+<aside class="rail">
+<a class="brand" href="#editor" aria-label="Cinematic 分镜工作台"><span class="brand-mark" aria-hidden="true"><i></i></span><span class="brand-word">CINEMATIC<small>STORYBOARD STUDIO</small></span></a>
+<div class="rail-project"><span class="rail-caption">当前分镜</span><strong id="rail-title">正在读取…</strong><span class="local-chip"><i></i> 本机工作空间</span></div>
+<label class="nav-search"><span class="sr-only">查找段落或镜头</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input id="nav-search" type="search" placeholder="查找段落 / 镜号" autocomplete="off"></label>
+<div class="rail-heading"><span>分镜目录</span><span id="nav-count"></span></div>
+<div id="navigation" role="region" aria-label="镜头组与镜头数量"></div><p id="nav-empty" class="nav-empty" hidden>没有匹配的段落或镜头</p>
+<button id="add-section">＋ 新增段落</button>
+<div class="rail-note"><span class="rail-note-line"></span>先组织观看，再决定镜头。<small>分镜与素材留在项目目录。</small></div>
+</aside>
+<div class="workspace">
+<div class="sticky-chrome"><header class="toolbar"><div class="creative-tools" role="group" aria-label="创作辅助工具"><span class="creative-tools-label">创作工具</span><button id="find-reference" class="reference-entry" aria-controls="creative-references" aria-pressed="false">找画面参考</button></div><div class="actions"><span id="save-state" role="status" aria-live="polite">正在读取…</span><button id="retry" hidden>重试保存</button><button id="reload" hidden>重新读取已保存稿</button><details class="utility-menu"><summary>更多操作 <span aria-hidden="true">⌄</span></summary><div class="utility-popover"><button id="undo" disabled>撤销删除</button><button id="draft-export">导出本地草稿</button><button id="open-style">视觉风格参考</button></div></details><a href="/api/markdown" download>导出分镜阅览 <span aria-hidden="true">↗</span></a></div></header>
+<div class="view-bar"><nav id="view-navigation" class="view-navigation" aria-label="工作台视图"></nav><span id="duration"></span></div>
+<section id="stage-status" class="stage-status" aria-label="当前制作阶段" aria-live="polite"></section></div>
+<div id="notice" class="notice" role="alert" hidden></div><main id="editor" tabindex="-1"></main>
+<section id="project-overview" aria-label="项目与协作" hidden></section>
+<section id="creative-references" aria-label="创意镜头参考" hidden></section>
+<section id="style-library" aria-label="视觉定调" hidden></section>
+<section id="asset-preview" aria-label="分镜图所用图片资产" hidden></section>
+<section id="image-preview" aria-label="分镜预览" hidden></section>
+<footer><span class="footer-brand">CINEMATIC <b>／</b> STORYBOARD</span><span>编辑稿、确认稿与制作记录，分别保留。</span></footer>
+</div>
+</body>
+</html>

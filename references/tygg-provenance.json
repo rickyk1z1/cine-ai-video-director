@@ -1,0 +1,283 @@
+{
+  "source": "用户提供TYGG AI Film Studio v3.2.7",
+  "references": [
+    {
+      "source": "ai-video-and-asset-prompts.md",
+      "source_sha256": "c8e6145680ac480aa3e7870326322e757b6ce0ee51630142362ea3a0099945c7",
+      "category": "需要适配",
+      "gap_and_value": "补齐角色映射、入画/画外连续性、动作和文戏提示词颗粒度及偏差归因。",
+      "target": "references/production-detail/ai-video-and-asset-prompts.md"
+    },
+    {
+      "source": "animation-and-performance.md",
+      "source_sha256": "7ddda0656a7c705db0bc8fa08e68348246803556549cafcdde222925c686a598",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "完整人体、步态和动作重定向只在用户另行选择详细预演范围时加载。",
+      "target": "references/production-detail/animation-and-performance.md"
+    },
+    {
+      "source": "asset-library.md",
+      "source_sha256": "9842b8829062e12608f5a48de42701ccdb46c6a566737ed24c49c78f2f497da2",
+      "category": "需要适配",
+      "gap_and_value": "补齐完整地点资产、局部变体、实例/rig复用与3D资产清单；不启动共享资产库发布业务。",
+      "target": "references/production-detail/asset-library.md"
+    },
+    {
+      "source": "asset-manifest.schema.json",
+      "source_sha256": "3593b9c935a13682e8fb99b5b4bf8d507d1880b8101c6b0b5d8008d36e40ac42",
+      "category": "需要适配",
+      "gap_and_value": "保留实际3D资产清单数据结构，与当前asset记录通过文件引用衔接。",
+      "target": "references/production-detail/asset-manifest.schema.json"
+    },
+    {
+      "source": "blender-mcp-execution.md",
+      "source_sha256": "226ac9c1d8f0b97d05e5fae99819a2994dcc6750a3e06d960b22b84cafe65295",
+      "category": "需要适配",
+      "gap_and_value": "补齐真实工具发现、增量写入、幂等恢复、RNA/GN/Action版本分支、采样与缓存边界。",
+      "target": "references/production-detail/blender-mcp-execution.md"
+    },
+    {
+      "source": "blender-mcp-setup.md",
+      "source_sha256": "99dbce7293423c0cdd4c9058f7754c90ff190d634567548caa4eb954cbed7f83",
+      "category": "需要适配",
+      "gap_and_value": "保留安装/启用/加载/实例层次诊断；不在本轮安装、授权或切换实现。",
+      "target": "references/production-detail/blender-mcp-setup.md"
+    },
+    {
+      "source": "blocking-and-camera-paths.md",
+      "source_sha256": "b5020bc557172d35e7625cda5ca730b85bf3c5c9ae6a9c5eb9b154e5e83fa897",
+      "category": "需要适配",
+      "gap_and_value": "补齐空间/时间曲线、motion_owner、相机独立路线、视线/焦点分离和世界速度采样。",
+      "target": "references/production-detail/blocking-and-camera-paths.md"
+    },
+    {
+      "source": "camera-and-action.md",
+      "source_sha256": "9e92752f1dd7e54551c6f1f5fb39be619ed66871d4a44a8fb71bd07744d4b0eb",
+      "category": "需要适配",
+      "gap_and_value": "保留摄影选择、参照系、事件与连续性；不强套近战模板。",
+      "target": "references/production-detail/camera-and-action.md"
+    },
+    {
+      "source": "character-image-assets.md",
+      "source_sha256": "9c5a927447cef89ccb6cb804baa28a32fcacf25499e41326087be5b6e3c7d888",
+      "category": "需要适配",
+      "gap_and_value": "保留同角色多状态、母图依赖、代理映射与清晰构图；设定板版式作为选择而非强制。",
+      "target": "references/production-detail/character-image-assets.md"
+    },
+    {
+      "source": "character-proxy-standard.md",
+      "source_sha256": "73fde7e81e94bc6bcf1afb81a42f4ef1aaebe4de1d2622c30ae4499916e0b6fa",
+      "category": "需要适配",
+      "gap_and_value": "2.0只说明少量弯曲控制，遗漏H/W/D/L计算、环线数量、连续权重和支撑补偿；保留整套可选四骨骼模板及离线计算器。",
+      "target": "references/production-detail/character-proxy-standard.md"
+    },
+    {
+      "source": "commercial-architecture-blockout.md",
+      "source_sha256": "a1bb23fe4e73358bac8fcbc3259c07fcd5b2c0231cb0fe9165f7ab62fe62657f",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "补齐外到内拓扑、净空、柱网与功能分区；赌场仅按题材读取，不通用于酒店。",
+      "target": "references/production-detail/commercial-architecture-blockout.md"
+    },
+    {
+      "source": "contact-hand-ik.md",
+      "source_sha256": "48b6ecd43e72b9c4067333247d6f8e5b440b8d642f07307c0f7ab058b9b8a23b",
+      "category": "需要适配",
+      "gap_and_value": "2.0没有具体IK链、pole、腕/掌偏移及父子来源切换；保留比例、2骨IK、禁拉伸、世界变换与避免依赖环细节。",
+      "target": "references/production-detail/contact-hand-ik.md"
+    },
+    {
+      "source": "directing-story-and-editing.md",
+      "source_sha256": "39c5358691e7fddbfad30ffb45d3aad11ae2d3af864ae0e47588a1cc751375f3",
+      "category": "需要适配",
+      "gap_and_value": "补齐视点/信息差、beat作用、场次节奏层级、有效可读窗口与切点设计。",
+      "target": "references/production-detail/directing-story-and-editing.md"
+    },
+    {
+      "source": "director-plan-example.md",
+      "source_sha256": "4972d024d5c77959d46e4e3a05098e025df9aedcd0371733eaa080d1320676f3",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "保留完整长镜头节拍表与无人物例子，对白例子绑定外部录音。",
+      "target": "references/production-detail/director-plan-example.md"
+    },
+    {
+      "source": "fast-validation.md",
+      "source_sha256": "f4008298b3377a98d6071ac36c2fe719cc040393888d21d8b67f33037791678f",
+      "category": "需要适配",
+      "gap_and_value": "补齐可执行请求、采样上限、代理碰撞及不覆盖项；接入现有脚本，避免临时重写校验。",
+      "target": "references/production-detail/fast-validation.md"
+    },
+    {
+      "source": "hardware-profile.schema.json",
+      "source_sha256": "7316f191c7f3fff516a0fa72563abcd55bcba6eedb72d96850e1d161918ff179",
+      "category": "需要适配",
+      "gap_and_value": "保留硬件档案结构，预算和实测字段分离。",
+      "target": "references/production-detail/hardware-profile.schema.json"
+    },
+    {
+      "source": "hyper3d-scene-assets.md",
+      "source_sha256": "41112a7b6b7db88307f53891dc76bd9cb172edfdc7dd25d9283fd7d9a792f0ad",
+      "category": "需要适配",
+      "gap_and_value": "保留复杂静态对象筛选、替换锚点与实例成本；去掉固定质量/材质/安装顺序，作为用户选用的可选分支。",
+      "target": "references/production-detail/hyper3d-scene-assets.md"
+    },
+    {
+      "source": "interaction-choreography.md",
+      "source_sha256": "e61aaaf2a3a53315653acd906bd837749ebbf3e86379c2186e64af2d900e849b",
+      "category": "需要适配",
+      "gap_and_value": "保留明确目标、持续状态、触发/作用/响应与结果占位。",
+      "target": "references/production-detail/interaction-choreography.md"
+    },
+    {
+      "source": "interactive-development.md",
+      "source_sha256": "c4b3a14ea61833b59d1d424b2e11df0d5512fcacad925547bcc8adfabaa4d408",
+      "category": "已经充分吸收",
+      "gap_and_value": "整体方向再细调、继承已知信息在2.0已实现；不继承逐项三选和正文问卷禁令。",
+      "target": "references/style-development.md"
+    },
+    {
+      "source": "minimal-scene-spec.json",
+      "source_sha256": "9515b17c13cbafb68db996214473e8b8c495d1ebedbb17376671b1343931e82f",
+      "category": "需要适配",
+      "gap_and_value": "保留可解析静态示例用于离线验证，生产工程由确认分镜派生。",
+      "target": "references/production-detail/minimal-scene-spec.json"
+    },
+    {
+      "source": "offline-handoff-check.md",
+      "source_sha256": "81b1a76d590dfbef966330e180a857b77df5bc732df965aa38617d10778127f9",
+      "category": "需要适配",
+      "gap_and_value": "保留SceneSpec离线检查；旧generation-package仅作兼容测试，当前投产以storyboard package为准。",
+      "target": "references/production-detail/offline-handoff-check.md"
+    },
+    {
+      "source": "performance-budget.md",
+      "source_sha256": "d05acbc24f16c017f54ad5c91354746dccf00439ae5093846d13b35a9aa548b7",
+      "category": "需要适配",
+      "gap_and_value": "补齐预算表、统一内存边界、实例展开、GN/LOD及测量含义；启发值不作为硬件实测。",
+      "target": "references/production-detail/performance-budget.md"
+    },
+    {
+      "source": "previs-visual-contract.md",
+      "source_sha256": "9f4c8664da7ac77c085808bfcb053168516989624ae7584627cdf8f4fbb35bc1",
+      "category": "需要适配",
+      "gap_and_value": "保留代理表达/最终表演职责逐类对照及可见道具取舍，限定为已选中性模板。",
+      "target": "references/production-detail/previs-visual-contract.md"
+    },
+    {
+      "source": "production-approval-gates.md",
+      "source_sha256": "9c97f05ff7edc606605e07925e891042aab2c07ff2322a1f5e71016ecec08284",
+      "category": "已经充分吸收",
+      "gap_and_value": "2.0已有分镜/资产/静态/动态/投产/结果审查；不再建立另一套审批门。",
+      "target": "references/workbench.md"
+    },
+    {
+      "source": "production-document-templates.md",
+      "source_sha256": "03e5b49e669b965b7820d353baae535d9e535f5ef2d342a30a6214d4ce8ea7c4",
+      "category": "需要适配",
+      "gap_and_value": "把身份、摄影、节拍、交互和连续性表转为当前record正文模板，不新增Canon/PROJECT另一套状态。",
+      "target": "references/production-detail/production-document-templates.md"
+    },
+    {
+      "source": "project-documentation.md",
+      "source_sha256": "4d5ea25f52bea35254e0eab288e5556157e5a5bcf8e67f06fb4d9c1827956797",
+      "category": "已经充分吸收",
+      "gap_and_value": "当前项目入口、确认快照与production记录已承接；不引入PROJECT+project-state的另一套权威。",
+      "target": "references/workbench.md"
+    },
+    {
+      "source": "reality-to-design-quality.md",
+      "source_sha256": "bf82b270dd590c9a7d85f28a398369b494f1d8e7c75dbb40f1cb1a9bbe955b0f",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "保留功能到形态、可识别最低结构与资料判断。",
+      "target": "references/production-detail/reality-to-design-quality.md"
+    },
+    {
+      "source": "reference-image-driven-assets.md",
+      "source_sha256": "6d9c828897a074a02d90533ce834de72fc503b44613b43af880ff0307bcd3ccd",
+      "category": "需要适配",
+      "gap_and_value": "保留母图/空间合同分工、输入DAG、跨视角和状态一致性、完整生图卡与建模转译；去掉占位与固定排版。",
+      "target": "references/production-detail/reference-image-driven-assets.md"
+    },
+    {
+      "source": "reference-prompt-template.md",
+      "source_sha256": "ae2f282e0e67c823a1241b4aab469e995d0ffceca210de3a1e638fb24621f3cc",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "保留完整双人交接、多主体动作、文戏及多人反应实例；对白改为已确认录音，不让模型重新配音。",
+      "target": "references/production-detail/reference-prompt-template.md"
+    },
+    {
+      "source": "reference-video-delivery.md",
+      "source_sha256": "a03bbee010fde5fdc09b49ec0b901720e796ac559dee290719c90b4155aafec9",
+      "category": "需要适配",
+      "gap_and_value": "补齐干净预演输出、有限帧段恢复、源帧/局部时间和媒体验证；统一接当前集中投产包。",
+      "target": "references/production-detail/reference-video-delivery.md"
+    },
+    {
+      "source": "research-evidence-and-reality.md",
+      "source_sha256": "ecca29a53d559a40ad632b3582039c5983cff52427f6b1f5d35d6bbf39ff67d2",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "保留confirmed/inferred/artistic及研究层级，不加资料数量门槛。",
+      "target": "references/production-detail/research-evidence-and-reality.md"
+    },
+    {
+      "source": "research-sources.md",
+      "source_sha256": "cfe97d9d6c55d8959c380119e7109753678ba04326e4e73519437a2d82082969",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "保留出处及作者当时的核验/未验证范围，不转述为本机当前实测。",
+      "target": "references/production-detail/research-sources.md"
+    },
+    {
+      "source": "revision-and-handoff.md",
+      "source_sha256": "e43fb1921138382af6609fdd2977bd9d1ed37537440c7665222e97aa3c9248c1",
+      "category": "已经充分吸收",
+      "gap_and_value": "现有修订/快照/历史任务已实现；只补SceneSpec桥接与具体事件，不复制第二套生命周期。",
+      "target": "references/workbench.md"
+    },
+    {
+      "source": "scene-blockout-and-camera-motion.md",
+      "source_sha256": "acedb0e035f379098b83873d97ff3f0475a79c80011800963e355fd9a652b510",
+      "category": "需要适配",
+      "gap_and_value": "保留结构层级、净空、轨迹和低成本识别几何。",
+      "target": "references/production-detail/scene-blockout-and-camera-motion.md"
+    },
+    {
+      "source": "scene-contract.md",
+      "source_sha256": "6deb86cc29592859aebbfa8de9bccc16f2c60f096898c0e48c25d66291e7d8ff",
+      "category": "需要适配",
+      "gap_and_value": "补齐SceneSpec/ShotSpec、事件、时间与场次接口；由确认稿导出，只作为工程派生物。",
+      "target": "references/production-detail/scene-contract.md"
+    },
+    {
+      "source": "scene-contract.schema.json",
+      "source_sha256": "83d8a04ae20e80ffea0846bac8b02198f827724c42a05c0178350d87241cf4cd",
+      "category": "需要适配",
+      "gap_and_value": "保留工程结构校验合同，并由确认稿桥接检查防止双真源。",
+      "target": "references/production-detail/scene-contract.schema.json"
+    },
+    {
+      "source": "scene-semantic-detail-library.md",
+      "source_sha256": "664a70a3e2cd8e49287ec1cca7647fc234d40e02a417e987c6ea1d2f2e76c424",
+      "category": "值得保留为按需参考",
+      "gap_and_value": "补齐按场所功能/尺度/边界/操作/环境信号选择识别部件的候选库。",
+      "target": "references/production-detail/scene-semantic-detail-library.md"
+    },
+    {
+      "source": "user-review-and-prompt-handoff.md",
+      "source_sha256": "fcce5e1b0c78e7ce054f87d8e3e82e2224977c862e46808ed2f9981e3f588314",
+      "category": "已经充分吸收",
+      "gap_and_value": "2.0已实现按采用版本交付、手动/自动、反馈后由用户选择重提。",
+      "target": "references/video-production.md"
+    }
+  ],
+  "scripts": {
+    "test_proxy_dimensions.py": "f723c774bc01496b85021bd822ab5f2f08034767a47e704b2ea4d76e1f2a9ba6",
+    "prepare_image_placeholders.py": "b4268eeb7adddc99efef405961bcd77849fb9af215e17c5156672ea0eb9e1793",
+    "validate_previs_fast.py": "9fc0e572a2396a9cf1a1e9435fdf4a56278f4b6823141b524bf3a31c51755a35",
+    "test_offline_workflow.py": "ba19266d9a1bce2d97c3c8fd75036c4e8c81daa6fce8a628ed7f081a818d5486",
+    "inspect_performance.py": "db34ba2b8c228f8445a6a46b83bc4c099dc67966acb3d4a0576242b6775a0ba9",
+    "probe_hardware.py": "bea2658a5e705f7ace15c940ecc31f2fc91ea6f37c51dc069282c36e07ca0ed2",
+    "test_validate_previs_fast.py": "b9108e72507ff9629d7e875085af886f54e5a19b059922c835e9ae6dc915b2ba",
+    "derive_proxy_dimensions.py": "00ac61b24a227890ae198950c432dab4f74670176e0433f386ece0ef59f8233d",
+    "validate_handoff.py": "f16c38d99b3b7855a2d0aba56e56b5ca38883622f3c96f6a1d454c28d6cf093e"
+  },
+  "excluded_script": "prepare_image_placeholders.py"
+}

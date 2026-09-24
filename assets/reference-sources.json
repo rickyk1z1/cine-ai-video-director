@@ -1,0 +1,7 @@
+[
+  {"id":"eyecandy","label":"Eyecandy","domain":"eyecannndy.com","url":"https://eyecannndy.com/","use":"首查：按运镜、转场和视觉技法浏览动态示例。","priority":1},
+  {"id":"stash","label":"Stash","domain":"stashmedia.tv","url":"https://www.stashmedia.tv/archive/","use":"动态图形、动画与VFX补充；完整馆藏可能需要会员。","priority":2},
+  {"id":"frameset","label":"Frame Set","domain":"frameset.app","url":"https://frameset.app/","use":"Motions中的剪辑技法、运镜与转场；访问与套餐按本轮实际状态判断。","priority":2},
+  {"id":"goodmoves","label":"Good Moves","domain":"goodmoves.tv","url":"https://goodmoves.tv/","use":"按动画类型、风格标签和日期找动态设计作品。","priority":2},
+  {"id":"motion_design_awards","label":"Motion Design Awards","domain":"motiondesignawards.com","url":"https://www.motiondesignawards.com/","use":"低频补充：获奖动态图形整片，适合已有风格方向时比较。","priority":3}
+]

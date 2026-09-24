@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/blender-ai-previs/scene-contract.schema.json",
+  "title": "TYGG AI Film Studio SceneSpec",
+  "type": "object",
+  "required": ["schema_version", "project", "scene", "assets", "shots", "sequence", "events", "continuity", "budgets"],
+  "properties": {
+    "schema_version": {"enum": ["1.0", "1.1"]},
+    "project": {"type": "object", "required": ["id", "seed", "request_id"], "properties": {"id": {"type": "string"}, "seed": {"type": "integer"}, "request_id": {"type": "string"}}},
+    "scene": {"type": "object", "required": ["id", "units", "up_axis", "fps", "frame_start", "frame_end"], "properties": {"id": {"type": "string"}, "units": {"const": "m"}, "up_axis": {"const": "Z"}, "fps": {"type": "number", "exclusiveMinimum": 0}, "frame_start": {"type": "integer"}, "frame_end": {"type": "integer"}}},
+    "assets": {"type": "array", "items": {"$ref": "#/$defs/idObject"}},
+    "shots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "frame_range", "dramatic_intent", "shot_size", "camera"],
+        "properties": {
+          "id": {"type": "string"},
+          "frame_range": {"type": "array", "prefixItems": [{"type": "integer"}, {"type": "integer"}], "minItems": 2, "maxItems": 2},
+          "dramatic_intent": {"type": "string"},
+          "shot_size": {"type": "string"},
+          "camera": {
+            "type": "object",
+            "required": ["lens_mm", "focus_target"],
+            "properties": {
+              "lens_mm": {"type": "number", "exclusiveMinimum": 0},
+              "focus_target": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "sequence": {"type": "object", "required": ["timeline_fps", "camera_cuts"], "properties": {"timeline_fps": {"type": "number", "exclusiveMinimum": 0}, "camera_cuts": {"type": "array", "items": {"type": "object", "required": ["edit_frame", "shot_id", "camera_id", "source_frame"]}}}},
+    "events": {"type": "array", "items": {"type": "object", "required": ["id", "frame", "type", "target", "phase"]}},
+    "continuity": {"type": "object", "required": ["links"], "properties": {"links": {"type": "array", "items": {"type": "object", "required": ["from_shot", "to_shot", "from_frame", "to_frame", "handoff_state", "allowed_error"]}}}},
+    "budgets": {
+      "type": "object",
+      "required": ["visible_triangles", "objects"],
+      "$comment": "In 1.1, external semantic validation must check visible_triangles == expanded_visible_triangles, objects == base_objects, and hardware_profile_id matches performance and the referenced profile.profile_id. These are budget ceilings, not measurements.",
+      "properties": {
+        "visible_triangles": {"type": "integer", "minimum": 1},
+        "objects": {"type": "integer", "minimum": 1},
+        "hardware_profile_id": {"type": "string", "minLength": 1},
+        "calibration_status": {"enum": ["heuristic", "calibrated", "fallback"]},
+        "expanded_visible_triangles": {"type": "integer", "minimum": 1},
+        "base_objects": {"type": "integer", "minimum": 1},
+        "instance_count_soft": {"type": "integer", "minimum": 0},
+        "texture_mb": {"type": "number", "minimum": 0},
+        "target_fps": {"type": "number", "exclusiveMinimum": 0},
+        "viewport_status": {"enum": ["unverified", "observed", "measured"]},
+        "render_resolution": {"$ref": "#/$defs/resolution"}
+      }
+    },
+    "performance": {
+      "type": "object",
+      "required": ["hardware_profile_id", "stage", "measurement_method", "viewport_fps", "depsgraph_ms_p95", "warnings"],
+      "$comment": "Dependency-graph time does not measure viewport FPS. null represents unavailable measurements; it must not be replaced with a target or inferred FPS.",
+      "properties": {
+        "hardware_profile_id": {"type": "string", "minLength": 1},
+        "stage": {"enum": ["microbenchmark", "production"]},
+        "measurement_method": {"type": "string", "minLength": 1},
+        "viewport_fps": {"type": ["number", "null"], "minimum": 0},
+        "depsgraph_ms_p95": {"type": ["number", "null"], "minimum": 0},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": "1.1"}}, "required": ["schema_version"]},
+      "then": {
+        "required": ["performance"],
+        "properties": {
+          "budgets": {
+            "required": ["hardware_profile_id", "calibration_status", "expanded_visible_triangles", "base_objects", "instance_count_soft", "texture_mb", "target_fps", "viewport_status", "render_resolution"]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "idObject": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}}},
+    "resolution": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 2, "maxItems": 2}
+  }
+}

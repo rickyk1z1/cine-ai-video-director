@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>视觉定调库 · 看图找方向</title>
+
+</head>
+<body><div data-cinematic-atlas-root><div class="wrap">
+<header><div><div class="eyebrow">VISUAL DIRECTION ATLAS · PERSONAL REFERENCE</div><h1>先看画面，再定方向。</h1><p>选择呈现形式、辨认画风，再决定调性。参考图中的人物与故事，不会自动成为你的影片要求。</p></div><div class="small" id="edition"></div></header>
+<div class="layout">
+<nav aria-label="呈现形式"><p class="step"><span class="num">01</span>呈现形式</p><div id="formButtons"></div><p id="formHint"></p><hr><p class="small">定格是一种制作技法，也可以选择由 AI 模拟的手作外观与动作节奏。</p></nav>
+<main><p class="step"><span class="num">02</span>视觉方向</p><div class="browse"><button class="button active" id="recommended">先看推荐</button><button class="button" id="all">浏览全部</button><button class="button" id="compare" disabled>对比已选（0）</button></div><label><span class="small">搜索名称或视觉特征</span><input class="search" id="search" type="search" placeholder="例如：水墨、3D、粘土、国漫、赛博朋克"></label><div class="results"><span id="count"></span><button class="clear" id="reset">重置筛选</button></div><p id="viewNote"></p><div class="grid" id="cards"></div></main>
+<aside class="side"><p class="step"><span class="num">03</span>调性与定调</p><h2>这条片子的视觉方向</h2><div id="chosen"></div><p class="small">可以组合一个基础画风与一个世界方向。调性建议选 1–2 项。说明会随选择更新，可复制后补充品牌要求。</p><div class="toneList" id="tones"></div><div class="tonehint" id="toneHint"></div><label class="small" for="brief">定调说明</label><textarea readonly id="brief" placeholder="选一个方向后，这里会形成可交给制作助手的定调说明。"></textarea><label class="small" for="projectNotes">本片补充（可选）</label><textarea id="projectNotes" placeholder="需要保留的品牌色、人物比例、材质或动态偏好。"></textarea><button class="button primary" id="saveProject" hidden>保存到当前工作台</button><button class="button primary" id="copy">复制定调说明</button><button class="button" id="download">保存为文本</button><div id="notice" role="status" aria-live="polite"></div><p class="small">这是制作前的视觉约定。具体人物、场景、镜头和动作还需结合剧本确定。</p></aside>
+</div>
+<footer class="foot">本地图片可离线浏览；来源链接需要联网。主要样图来自 Midlibrary、OpenArt，少量来自作品官方。这里收录常见大方向，不提供全球热度排名。<br><a href="视觉风格图鉴.md">Markdown 图鉴</a> · <a href="glossary.md">术语与边界</a> · <a href="atlas.json">结构化目录</a></footer>
+</div>
+<dialog id="detail"><div class="modalhead"><h2 id="detailTitle"></h2><button class="button" id="closeDetail">关闭</button></div><div class="modalbody" id="detailBody"></div></dialog>
+<dialog id="comparison"><div class="modalhead"><h2>放在一起看差别</h2><button class="button" id="closeCompare">关闭</button></div><div class="modalbody comparegrid" id="compareBody"></div></dialog>
+<noscript>此浏览页需要启用 JavaScript。也可以直接打开同目录的《视觉风格图鉴.md》及 images 文件夹。</noscript>
+</div>
+<script src="atlas-data.js"></script>
+<script src="app.js"></script>
+</body></html>

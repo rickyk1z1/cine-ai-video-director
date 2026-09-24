@@ -1,0 +1,23 @@
+{
+  "name": "cinematic-storyboard",
+  "version": "3.0.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "description": "分镜与 AI 视频素材制作 Skill 的私有安装包",
+  "bin": {
+    "cinematic-storyboard-install": "bin/install.cjs"
+  },
+  "files": [
+    "SKILL.md",
+    "AGENTS.md",
+    "agents/",
+    "assets/",
+    "references/",
+    "scripts/",
+    "tests/",
+    "bin/"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}

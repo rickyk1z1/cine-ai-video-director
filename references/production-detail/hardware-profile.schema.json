@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/blender-ai-previs/hardware-profile.schema.json",
+  "title": "TYGG AI Film Studio Hardware Profile",
+  "type": "object",
+  "required": ["schema_version", "profile_id", "timestamp", "os", "cpu", "ram", "gpus", "source", "confidence", "tier_hint", "tier_basis", "blender", "calibration"],
+  "properties": {
+    "schema_version": {"const": "1.1"},
+    "profile_id": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "os": {
+      "type": "object",
+      "required": ["system", "release", "architecture"],
+      "properties": {
+        "system": {"type": "string"},
+        "release": {"type": "string"},
+        "architecture": {"type": "string"}
+      }
+    },
+    "cpu": {
+      "type": "object",
+      "required": ["name", "physical_cores", "logical_threads", "source", "confidence"],
+      "properties": {
+        "name": {"type": ["string", "null"]},
+        "physical_cores": {"type": ["integer", "null"], "minimum": 1},
+        "logical_threads": {"type": ["integer", "null"], "minimum": 1},
+        "source": {"type": "string"},
+        "confidence": {"type": "string"}
+      }
+    },
+    "ram": {
+      "type": "object",
+      "required": ["total_bytes", "available_bytes", "source", "confidence"],
+      "properties": {
+        "total_bytes": {"$ref": "#/$defs/bytesOrNull"},
+        "available_bytes": {"$ref": "#/$defs/bytesOrNull"},
+        "source": {"type": "string"},
+        "confidence": {"type": "string"}
+      }
+    },
+    "gpus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "vendor", "dedicated_vram_total_bytes", "dedicated_vram_free_bytes", "driver_version", "memory_kind", "source", "confidence"],
+        "properties": {
+          "name": {"type": ["string", "null"]},
+          "vendor": {"type": ["string", "null"]},
+          "dedicated_vram_total_bytes": {"$ref": "#/$defs/bytesOrNull"},
+          "dedicated_vram_free_bytes": {"$ref": "#/$defs/bytesOrNull"},
+          "driver_version": {"type": ["string", "null"]},
+          "memory_kind": {"type": "string"},
+          "source": {"type": "string"},
+          "confidence": {"type": "string"}
+        }
+      }
+    },
+    "source": {"type": "array", "items": {"type": "string"}},
+    "confidence": {"enum": ["measured_partial", "fallback", "unknown"]},
+    "tier_hint": {"enum": ["low", "mid", "high"]},
+    "tier_basis": {"type": "array", "items": {"type": "string"}},
+    "blender": {
+      "type": ["object", "null"],
+      "properties": {
+        "version": {"type": "string"},
+        "render_engine": {"type": "string"},
+        "viewport_resolution": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 2, "maxItems": 2},
+        "shading_mode": {"type": "string"}
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "required": ["status", "viewport_playback_verified", "measurement_method", "viewport_fps", "depsgraph_ms_p95"],
+      "$comment": "not_run maps to heuristic SceneSpec budgets. Inventory and dependency-graph timing alone cannot verify viewport playback. Completed calibration describes only the recorded Blender version, viewport mode/resolution and tested scene.",
+      "properties": {
+        "status": {"enum": ["not_run", "partial", "completed", "fallback"]},
+        "viewport_playback_verified": {"type": "boolean"},
+        "measurement_method": {"type": "string", "minLength": 1},
+        "viewport_fps": {"type": ["number", "null"], "minimum": 0},
+        "depsgraph_ms_p95": {"type": ["number", "null"], "minimum": 0},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "$defs": {
+    "bytesOrNull": {"type": ["integer", "null"], "minimum": 0}
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.1",
+  "workflow": {
+    "skill_rule_version": "3.1",
+    "status": "planned"
+  },
+  "project": {
+    "id": "EXAMPLE_PRODUCT",
+    "seed": 42,
+    "request_id": "example-only"
+  },
+  "scene": {
+    "id": "SC_010",
+    "units": "m",
+    "up_axis": "Z",
+    "fps": 24,
+    "frame_start": 1,
+    "frame_end": 120,
+    "resolution": [
+      1280,
+      720
+    ],
+    "pacing_profile": {
+      "mode": "observation",
+      "information_rate": "measured",
+      "performance_energy": "restrained",
+      "camera_energy": "low",
+      "editorial_density": "sparse",
+      "required_readability": [
+        "product_silhouette"
+      ]
+    }
+  },
+  "assets": [
+    {
+      "id": "PRP_product",
+      "role": "product",
+      "status": "planned"
+    },
+    {
+      "id": "CAM_SH_010",
+      "role": "camera",
+      "status": "planned"
+    }
+  ],
+  "shots": [
+    {
+      "id": "SH_010",
+      "frame_range": [
+        1,
+        120
+      ],
+      "dramatic_intent": "read product silhouette",
+      "shot_size": "medium",
+      "camera": {
+        "id": "CAM_SH_010",
+        "lens_mm": 50,
+        "focus_target": "PRP_product"
+      },
+      "path": {
+        "type": "static"
+      },
+      "continuity_links": []
+    }
+  ],
+  "sequence": {
+    "timeline_fps": 24,
+    "active_camera_strategy": "single_scene_markers",
+    "camera_cuts": [
+      {
+        "edit_frame": 1,
+        "shot_id": "SH_010",
+        "camera_id": "CAM_SH_010",
+        "source_frame": 1
+      }
+    ]
+  },
+  "events": [],
+  "continuity": {
+    "links": []
+  },
+  "budgets": {
+    "hardware_profile_id": "example-unmeasured",
+    "calibration_status": "heuristic",
+    "visible_triangles": 100000,
+    "expanded_visible_triangles": 100000,
+    "objects": 100,
+    "base_objects": 100,
+    "instance_count_soft": 100,
+    "texture_mb": 128,
+    "target_fps": 24,
+    "viewport_status": "unverified",
+    "render_resolution": [
+      1280,
+      720
+    ]
+  },
+  "performance": {
+    "hardware_profile_id": "example-unmeasured",
+    "stage": "production",
+    "measurement_method": "not_run",
+    "viewport_fps": null,
+    "depsgraph_ms_p95": null,
+    "warnings": [
+      "Example only; no Blender measurements performed."
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "分镜与AI视频素材生产（原名：cinematic-storyboard）"
+  short_description: "推敲分镜与视频素材，统一工作台协作、寻找创意参考并校准时长"
+  default_prompt: "使用 $cinematic-storyboard，根据这次视频的目标和已有资料推敲分镜、准备可审查的素材与投产包；按实际镜头决定生成段落与交接。"
