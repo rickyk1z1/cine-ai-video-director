@@ -11,8 +11,10 @@ import sys
 
 POLICY = '参考图仅提供指定属性，不按图片顺序演变，不强制复现整幅构图。'
 # These are attachment syntaxes, not natural-language rules for judging a prompt.
-NODE_TAG = re.compile(r'<(node-asset|pippit-asset-id)>([^<]+)</\1>')
-ASSET_TAG = re.compile(r'<(?:node-asset|pippit-asset-id)>|<Picture\s+\d+>|@(?:图片|图像|视频|音频|图|Image|Video|Audio)\s*\d+', re.I)
+# Quoted attributes may contain >; consume the entire tag before checking its ID.
+NODE_TAG = re.compile(r"<(?P<tag>node-asset|pippit-asset-id)(?:\s+[\w:-]+\s*=\s*(?:\"[^\"]*\"|'[^']*'))*\s*>([^<>]+)</(?P=tag)\s*>")
+NODE_START = re.compile(r'</?(?:node-asset|pippit-asset-id)\b', re.I)
+ASSET_TAG = re.compile(r'<(?:node-asset|pippit-asset-id)\b|<Picture\s+\d+>|@(?:图片|图像|视频|音频|图|Image|Video|Audio)\s*\d+', re.I)
 LIMITS = ('仅核验声明结构、正文原句及位置、参考职责和镜头覆盖；不能证明要求完整、'
           '语义等价、来源真实、参考必要或模型服从。声音与动态效果须检查实际结果。')
 
@@ -107,7 +109,13 @@ def _reference_errors(bundle, prompt, errors, v3):
             errors.append('普通图片参考须声明not_required')
         if ref.get('mode') == 'strict_boundary' and not all(_text(ref.get(k)) for k in ('scope', 'evidence')):
             errors.append('严格边界须有范围和用户/真实入口依据')
-    tags = {match.group(2) for match in NODE_TAG.finditer(prompt)}
+    matches = list(NODE_TAG.finditer(prompt))
+    tags = {match.group(2).strip() for match in matches}
+    remaining = NODE_TAG.sub('', prompt)
+    if NODE_START.search(remaining):
+        errors.append('素材节点标签格式无法识别或未闭合，须核对实际平台语法')
+    if any(not match.group(2).strip() for match in matches):
+        errors.append('素材节点标签ID不能为空')
     if tags - set(ids):
         errors.append('正文中的实际节点标签未逐项分配参考职责')
     if len(ids) != len(set(ids)):

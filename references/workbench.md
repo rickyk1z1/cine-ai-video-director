@@ -108,26 +108,28 @@ HTML只提供统一交互，联网搜索与会话创建由当前Codex会话执�
 
 审查写 `decision_type: sequence_review`，以实际 `rehearse` 返回的 manifest绑定所看范围，记录真实 `summary`、`result: ready|revise` 和接点依据。两种 result 都表示本次整段审查已完成；有建议不表示流程回退。之后人工修改按 `revise` 落实并更新输入，不重新评审用户方案；原审查只对应其实际版本。
 
-生成建议用一条 `generation_recommendation` 决定维护，同一ID随方案更新。设计初稿先给有用的初步建议；本批审查时汇总可执行方案；人工调整后只更新受影响的建议。旧建议若材料已经变化，页面提示需同步，而不撤销用户已选路线。
+生成建议按独立制作范围维护 `generation_recommendation`，同一ID随当前设计更新；文字阶段即可展示和选择具体组合，图稿页复用同一记录。新完整建议使用 `planning_version:1`，旧建议仍可读。不同组合或需要独立选择的范围分别建记录，不把一个全项目推荐永久套给新内容。
 
 ```json
 {
   "decision_type":"generation_recommendation",
-  "batch_id":"本作品稳定批次",
-  "platform":"当前已选平台，未知时省略",
-  "groups":[
-    {"shot_ids":["SH01","SH02"],"input_mode":"多镜一次生成／首帧或其他真实建议","model":"已核实模型，未知时省略","reason":"控制目标及为何合组","inputs":"实际需要的人物、场景或运动依据","cost":"生成次数、秒数或核实的费用；未知明确写未知","limits":"实际风险和能力缺口"}
-  ],
-  "options":[
-    {"path":"direct_platform","label":"直接去平台生成","recommended":true,"reason":"直接输入足以完成本段","tradeoff":"主要风险与成本"},
-    {"path":"previs_reference","label":"先 Blender 预演，再平台生成","tool":"Blender","recommended":false,"reason":"预演可解决的具体空间问题","tradeoff":"增加准备工作，换取哪些可控性"}
-  ]
+  "planning_version":1,
+  "batch_id":"当前作品批次",
+  "method_evidence":{
+    "status":"reused",
+    "summary":"实际控制难点与这份依据为何适用",
+    "sources":[{"url":"实际查阅链接","checked_at":"实际查阅日期","applied":"借用的具体方法","limits":"入口和适用边界"}]
+  },
+  "groups":[{"shot_ids":["SH01"],"reason":"生成分组依据","input_mode":"真实模式","model":"实际模型","platform":"实际入口","inputs":"现有参考与缺口","cost":"未知或实测","limits":"真实限制"}],
+  "options":[{"id":"primary","path":"direct_platform","recommended":true,"label":"本段主方案","model":"实际模型及版本","platform":"实际入口","input_mode":"真实模式","reason":"对应控制需要","inputs":"使用哪些采用素材、缺什么及原因；无需新增则说明","limits":"真实限制与未验证项"}]
 }
 ```
 
-示例是字段解释，不是可直接采用的真实建议。生成建议中的 `groups` 表示计划生成任务，按[生成分组方法](generation-strategy.md#从逐镜判断落到可制作的生成段落)关联真实镜头；文字分镜的镜头组与生成任务不强制一一对应，合并/拆分理由沿现有说明保存；平台模式由镜头控制目标决定，不默认全能参考。已选其他预演工具时按真实工具改 label/tool。建议与路线选择分开，`recommended` 不代表用户已选。
+这只是字段说明，不能将占位内容写入真实记录。`method_evidence.status` 为 queried/reused/no_match/unavailable/user_specified；前两项必须有真实 sources，后几项说明缺口与继续依据，不伪造查阅。校验字段不能证明语义正确。没有足够能力信息时先记录待完善建议，不加 planning_version 冒充可选择的完整组合；缺口由助手查证，别让用户填能力表。
 
-工作台在图序审查后集中展示结论、生成建议和两条路线，可记录用户选择；选择只写本地决定，不提交任务或消耗积分。用户在对话中明确选择同样沿用。项目工作方式也可以直接在对话回答，由助手通过 `workspace` 的 `set_mode` 同步同一数据并继续执行，不要求再点击页面。平台未定不伪填“待定平台”，后续按真实缺口处理。文字直投用 `review_basis: text_only`，不为界面制造图片或整段图稿审查。
+路线用 `option_id` 区分，允许同为 direct_platform 的不同模型组合；旧版仅传 path 时必须唯一匹配。工作台 `/api/routes/choose` 或对话写回只保存选择，不改变提交权限；新规划选择带 `planning_only:true`，实际阶段沿 `image_stage_entry` / `video_preparation_entry` 记录。对话已确认的选择由助手直接写同一记录，不要求页面再点一次。选项应与本记录镜头范围相符，单个实际生成包不能跨互不兼容的组合。
+
+生成分组理由与作品声音按[生成策略](generation-strategy.md)组织；无图直投记录 `review_basis:text_only`，不为界面制造图稿。`current` 同时返回 generation_plans、routes 和 workflow.scopes[].next_actions；界面与导出消费当前状态，详情按 read --record-id 读取。修订与合法跳过见[推进与修订](workflow-navigation.md)。
 
 ## 阅读文档与文件组织
 

@@ -8,7 +8,7 @@ const path = require('node:path');
 
 const NAME = 'cinematic-storyboard';
 const MARKER = '.cinematic-storyboard-install.json';
-const CONTENT = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests'];
+const CONTENT = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests', 'README.md', 'docs'];
 const source = path.resolve(__dirname, '..');
 const version = require(path.join(source, 'package.json')).version;
 

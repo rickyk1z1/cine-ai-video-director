@@ -351,6 +351,7 @@ class Store:
                 'brief':view.get('brief',''),'source_text':view.get('source_text',''),'sections':sections,
                 'section_status':{sid:status for sid,status in view['_section_status'].items() if sid in section_ids},
                 'workflow':workflow,'routes':{sid:route for sid,route in view['_current_routes'].items() if sid in shot_ids},
+                'generation_plans':[r for r in production.active_records(view) if r.get('data',{}).get('decision_type')=='generation_recommendation' and r['id'] in selected],
                 'preview': [row for row in view['_preview_rows'] if row['shot_id'] in shot_ids],
                 'records':summaries,'export_warning':view['_export_warning'],
                 'prompts':[p for p in view.get('prompts',[]) if section_id is None or shot_ids.intersection(p.get('shot_ids',[]))],
@@ -377,7 +378,7 @@ class Store:
             result['_section_status']={sec['id']:production.confirmation_status(doc,sec['id']) for sec in doc['sections']}
             result['_export_warning']=self.export_problem(doc)
             result['_record_states']=production.record_states(doc,self.root)
-            result['_current_routes']={sid:{'record_id':r['id'],'path':r['data']['path']} for sid,r in production.current_routes(doc).items() if production.record_review_status(r)!='excluded'}
+            result['_current_routes']={sid:{'record_id':r['id'],**{k:r['data'].get(k) for k in ('path','option_id','model','platform','input_mode','planning_only')}} for sid,r in production.current_routes(doc).items() if production.record_review_status(r)!='excluded'}
             result['_sequence_receipts']={}
             for record in production.active_records(doc):
                 if record.get('data',{}).get('decision_type')=='generation_recommendation':
@@ -621,17 +622,25 @@ class Store:
                 if not affected or not set(affected)<=set(production.sections(doc)) or not set(basis)<=working:
                     raise ValueError('局部修订须承接已有图稿或视频制作范围；新任务请明确建立自己的范围')
                 ids=[sid for sec in doc['sections'] if sec['id'] in affected for sid in production.shot_ids(sec)]
-                production.put_record(doc,{'id':'revision-'+str(old['revision']+1),'kind':'decision','title':'本轮图稿协同修订',
-                    'body':'按本轮反馈同步修改文字和图稿，保留未受影响内容；不把修改许可记为结果采用。',
+                production.put_record(doc,{'id':'revision-'+str(old['revision']+1),'kind':'decision','title':'本轮制作内容修订',
+                    'body':'按实际影响更新内容与依赖，保留有效决定和未受影响成果；不把修改许可记为结果采用。',
                     'section_ids':affected,'shot_ids':ids,'data':{'decision_type':'image_stage_entry',
                     'batch_id':doc['id'],'selection_evidence':evidence,'revision_basis':basis}},self.root)
                 old_ids={sid for sec in old['sections'] if sec['id'] in basis for sid in production.shot_ids(sec)}
                 current_ids=[sid for sec in doc['sections'] for sid in production.shot_ids(sec)]
+                previous_scopes=production.workflow_status(old,self.root)['scopes']
+                if any(s['section_id'] in basis and s['phase']==2 for s in previous_scopes):
+                    production.put_record(doc,{'id':'revision-video-'+str(old['revision']+1),'kind':'decision','title':'承接本轮视频修订范围',
+                        'section_ids':affected,'shot_ids':ids,'data':{'decision_type':'video_preparation_entry','batch_id':doc['id'],
+                        'selection_evidence':evidence,'revision_basis':basis}},self.root)
                 current_routes=production.current_routes(old)
                 for route in production.active_records(old):
                     rd=route.get('data',{})
                     if rd.get('decision_type')!='production_path' or production.record_review_status(route)=='excluded' or rd.get('path')=='hybrid' or not old_ids or not old_ids<=set(route['shot_ids']):continue
                     if any(current_routes.get(sid,{}).get('id')!=route['id'] for sid in old_ids):continue
+                    new_ids=set(ids)-old_ids
+                    reuse=incoming.get('route_reuse_evidence')
+                    if new_ids and not (isinstance(reuse,str) and reuse.strip()):continue
                     assignments=rd.get('assignments',[])
                     tools={a.get('tool') for a in assignments}
                     if rd['path'] in production.PREVIS_PATHS and len(tools)!=1:continue
@@ -642,7 +651,7 @@ class Store:
                     assignment={'path':rd['path'],'shot_ids':updated['shot_ids']}
                     if tools and next(iter(tools)):assignment['tool']=next(iter(tools))
                     updated['data']['assignments']=[assignment]
-                    updated['data']['scope_extension_evidence']=evidence
+                    updated['data']['scope_extension_evidence']=incoming.get('route_reuse_evidence') or evidence
                     production.put_record(doc,updated,self.root)
             for item in incoming.get('confirmations',[]):production.confirm(doc,item['section_id'],item['evidence'])
             remaining=copy.deepcopy(incoming.get('records',[]))
@@ -710,7 +719,7 @@ class Store:
             result['revision']=revision
             return result
 
-    def choose_route(self, recommendation_id, path, expected):
+    def choose_route(self, recommendation_id, path, expected, option_id=None):
         with self.lock():
             doc=self._read();self.expected(doc,expected)
             recommendation=next((r for r in production.active_records(doc) if r['id']==recommendation_id
@@ -718,11 +727,23 @@ class Store:
             if recommendation is None:raise ValueError('生成建议不存在')
             if production.is_stale(doc,recommendation,self.root):raise Conflict('建议依据已变化，请先同步受影响的生成建议')
             data=recommendation['data']
-            option=next((x for x in data.get('options',[]) if x.get('path')==path),None)
+            matches=[x for x in data.get('options',[]) if x.get('id')==option_id] if option_id is not None else [x for x in data.get('options',[]) if x.get('path')==path]
+            if len(matches)!=1:raise ValueError('请用option_id选择唯一方案')
+            option=matches[0];path=option.get('path')
             if option is None or path not in ('direct_platform','previs_reference'):raise ValueError('请选择当前展示的生成路线')
+            continued=[scope for scope in production.workflow_status(doc,self.root)['scopes'] if scope['phase']==2 and scope['section_id'] in recommendation['section_ids']]
+            for scope in continued:
+                sid=scope['section_id'];ids=[i for i in production.shot_ids(production.sections(doc)[sid]) if i in recommendation['shot_ids']]
+                production.put_record(doc,{'id':'continue-video-'+sid,'kind':'decision','title':'沿用本段视频制作进度',
+                    'section_ids':[sid],'shot_ids':ids,'data':{'decision_type':'video_preparation_entry',
+                    'batch_id':data.get('batch_id') or doc['id'],'selection_evidence':'已有视频制作范围内调整方案，保持该范围进度'}},self.root)
             selected={'decision_type':'production_path','batch_id':data.get('batch_id') or doc['id'],
                 'path':path,'selection_evidence':'用户在工作台选择：'+option.get('label',path),
-                'source_recommendation':recommendation_id}
+                'source_recommendation':recommendation_id,
+                'planning_only':True}
+            for key in ('id','model','input_mode','inputs','method_evidence'):
+                if option.get(key) is not None:selected['option_id' if key=='id' else key]=copy.deepcopy(option[key])
+            if data.get('method_evidence'):selected['method_evidence']=copy.deepcopy(data['method_evidence'])
             if option.get('tool'):selected['tool']=option['tool']
             if option.get('platform') or data.get('platform'):selected['platform']=option.get('platform') or data['platform']
             if option.get('output_scope') or data.get('output_scope'):selected['output_scope']=option.get('output_scope') or data['output_scope']
@@ -858,7 +879,7 @@ def serve(store,port):
                 elif path in ('/api/transact','/api/revise'): result=store.transact(body['transaction'],body['expected_revision'],path=='/api/revise')
                 elif path=='/api/workspace': result=store.workspace_action(body['command'],body['expected_revision'])
                 elif path=='/api/prepare': result=store.prepare(body['record'],body['expected_revision'])
-                elif path=='/api/routes/choose': result=store.choose_route(body['recommendation_id'],body['path'],body['expected_revision'])
+                elif path=='/api/routes/choose': result=store.choose_route(body['recommendation_id'],body.get('path'),body['expected_revision'],body.get('option_id'))
                 elif path=='/api/production/records': result=store.record(body['record'],body['expected_revision'])
                 elif path=='/api/sections/confirm': result=store.confirm(body['section_id'],body['expected_revision'],body['evidence'])
                 elif path.startswith('/api/suggestions/'):

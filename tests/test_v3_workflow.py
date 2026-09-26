@@ -54,7 +54,7 @@ class WorkflowV3Tests(unittest.TestCase):
     def test_uniform_route_survives_and_extends_to_new_shot(self):
         t=self.t;self.entry();t.path_decision()
         d=t.store.read();shot=storyboard.new_shot();shot.update(number='third',content='补充交代',duration=2);d['sections'][0]['groups'][0]['shots'].append(shot)
-        out=t.store.transact({'document':d,'evidence':'本批补一个镜头，仍按刚才直投路线'},d['revision'],revise=True)
+        out=t.store.transact({'document':d,'evidence':'本批补一个镜头，仍按刚才直投路线','route_reuse_evidence':'新增反应镜头无新控制需求，原入口适用'},d['revision'],revise=True)
         route=next(r for r in out['production']['records'] if r['id']=='PATH')
         self.assertIn(shot['id'],route['shot_ids']);self.assertEqual(out['_workflow']['scopes'][0]['phase'],2)
         self.assertEqual(route['data']['selection_evidence'],'用户明确选择本批制作路径')
@@ -183,7 +183,7 @@ class WorkflowV3Tests(unittest.TestCase):
         t=self.t;self.entry();first=t.path_decision();second=copy.deepcopy(first);second['id']='PATH2';second['data'].update(path='previs_reference',assignments=[{'path':'previs_reference','tool':'Blender','shot_ids':t.ids}]);t.record(second)
         t.record(first);before=t.store.read();self.assertEqual(production.current_routes(before)[t.ids[0]]['id'],'PATH')
         d=copy.deepcopy(before);sh=storyboard.new_shot();sh.update(content='新增同范围镜头',duration=2);d['sections'][0]['groups'][0]['shots'].append(sh)
-        out=t.store.transact({'document':d,'evidence':'当前作品补这一镜，沿用刚才路线'},d['revision'],revise=True)
+        out=t.store.transact({'document':d,'evidence':'当前作品补这一镜，沿用刚才路线','route_reuse_evidence':'同内容补镜，原入口与控制方式仍适用'},d['revision'],revise=True)
         self.assertEqual(production.current_routes(out)[sh['id']]['id'],'PATH')
         self.assertEqual(next(r for r in out['production']['records'] if r['id']=='PATH2')['version'],1)
     def test_first_sequence_review_requires_actual_adopted_inputs(self):

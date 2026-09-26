@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 830" role="img" aria-labelledby="title desc">
+<title id="title">工作台布局说明</title><desc id="desc">当前工作台采用顶部项目导航。下方依次为保存与创作工具、制作视图、当前工作和内容区域。右侧为说明图例。</desc>
+<style>text{font-family:'PingFang SC','Microsoft YaHei',sans-serif;fill:#173d3b}.small{font-size:16px;fill:#55716c}.body{font-size:18px}.heading{font-size:20px;font-weight:650}.white{fill:white}.n{font-size:16px;fill:white;font-weight:700;text-anchor:middle}</style>
+<rect width="1240" height="830" fill="#f5f4ed"/>
+<text x="40" y="57" font-size="32" font-weight="700">工作台：先看当前工作，再处理需要决定的事</text>
+<text x="40" y="94" class="small">布局示意，非截图。当前版采用顶部导航；右侧为本图的说明图例。</text>
+<rect x="40" y="125" width="775" height="624" rx="16" fill="#fff" stroke="#cddbd4"/>
+<path d="M56 125 H799 Q815 125 815 141 V229 H40 V141 Q40 125 56 125" fill="#173d3b"/>
+<text x="64" y="164" class="heading white">Cinematic · 我的短片</text>
+<rect x="505" y="142" width="280" height="35" rx="7" fill="#305651"/>
+<text x="520" y="165" font-size="16" class="white">查找段落 / 镜号</text>
+<text x="64" y="207" class="small white">分镜目录　2 个镜头组 · 5 个镜头　　开场 ① ②　旅程 ③ ④ ⑤</text>
+<rect x="61" y="247" width="148" height="32" rx="7" fill="#eaf3ee"/>
+<text x="76" y="269" class="small">找画面参考</text>
+<text x="435" y="269" class="small">已保存 · 修订 12　更多操作　导出阅览</text>
+<line x1="60" y1="293" x2="795" y2="293" stroke="#dce5df"/>
+<text x="64" y="323" font-size="17">项目与协作　视觉定调　文字分镜　分镜所用资产　分镜预览</text>
+<line x1="307" y1="335" x2="378" y2="335" stroke="#238676" stroke-width="3"/>
+<rect x="60" y="355" width="735" height="92" rx="10" fill="#edf5ef"/>
+<text x="77" y="383" class="heading">当前工作 · 文字分镜</text>
+<text x="77" y="411" class="small">下一步：确定本段拍法、推荐路线与必要输入</text>
+<text x="77" y="433" font-size="14" fill="#55716c">文字分镜　 →　 图片资产与分镜图　 →　 视频制作与返修</text>
+<text x="64" y="483" class="heading">原文与构建思路</text>
+<text x="64" y="512" class="small">先看表达重点、镜头顺序和拍法，再讨论有必要的备选。</text>
+<rect x="60" y="534" width="735" height="90" rx="10" fill="#faf8f0" stroke="#ded7be"/>
+<text x="77" y="564" class="heading">文字分镜与制作方案</text>
+<text x="77" y="593" class="small">模型 · 平台 · 输入方式 · 所需素材 · 依据与限制</text>
+<rect x="661" y="552" width="115" height="36" rx="7" fill="#238676"/>
+<text x="676" y="575" font-size="16" class="white">选择此方案</text>
+<rect x="60" y="644" width="735" height="82" rx="10" fill="#fff" stroke="#d5e1da"/>
+<text x="77" y="674" class="heading">01　SH01　纸鸟在桌面轻轻展开翅膀</text>
+<text x="77" y="702" class="small">内容与动作默认展开；构图、运镜、声音等按需查看。</text>
+<circle cx="799" cy="185" r="15" fill="#cf744f"/><text x="799" y="190" class="n">1</text>
+<circle cx="799" cy="262" r="15" fill="#cf744f"/><text x="799" y="267" class="n">2</text>
+<circle cx="799" cy="319" r="15" fill="#cf744f"/><text x="799" y="324" class="n">3</text>
+<circle cx="799" cy="400" r="15" fill="#cf744f"/><text x="799" y="405" class="n">4</text>
+<circle cx="799" cy="579" r="15" fill="#cf744f"/><text x="799" y="584" class="n">5</text>
+<circle cx="799" cy="682" r="15" fill="#cf744f"/><text x="799" y="687" class="n">6</text>
+<circle cx="866" cy="155" r="15" fill="#cf744f"/><text x="866" y="160" class="n">1</text><text x="894" y="160" class="heading">项目与结构</text><text x="894" y="189" class="small">确认项目、查找镜头；</text><text x="894" y="212" class="small">组内数字只表示阅读顺序。</text>
+<circle cx="866" cy="255" r="15" fill="#cf744f"/><text x="866" y="260" class="n">2</text><text x="894" y="260" class="heading">保存与创作工具</text><text x="894" y="289" class="small">查看保存状态、导出稿件；</text><text x="894" y="312" class="small">随时请求具体画面参考。</text>
+<circle cx="866" cy="355" r="15" fill="#cf744f"/><text x="866" y="360" class="n">3</text><text x="894" y="360" class="heading">制作视图</text><text x="894" y="389" class="small">在同一份项目中切换查看；</text><text x="894" y="412" class="small">切页不代表改变制作阶段。</text>
+<circle cx="866" cy="455" r="15" fill="#cf744f"/><text x="866" y="460" class="n">4</text><text x="894" y="460" class="heading">当前工作</text><text x="894" y="489" class="small">了解现处阶段和下一步；</text><text x="894" y="512" class="small">不同段落可以有不同进度。</text>
+<circle cx="866" cy="555" r="15" fill="#cf744f"/><text x="866" y="560" class="n">5</text><text x="894" y="560" class="heading">当前制作方案</text><text x="894" y="589" class="small">一起看拍法、路线与素材；</text><text x="894" y="612" class="small">选择方案不会立即生成。</text>
+<circle cx="866" cy="655" r="15" fill="#cf744f"/><text x="866" y="660" class="n">6</text><text x="894" y="660" class="heading">逐镜内容</text><text x="894" y="689" class="small">审阅和修改具体画面；</text><text x="894" y="712" class="small">只联动真正受影响的输入。</text>
+<text x="40" y="790" class="body">页面保存成功 → 回到对话说“继续” → 助手读取并执行已有选择。页面不会自动发送消息。</text></svg>

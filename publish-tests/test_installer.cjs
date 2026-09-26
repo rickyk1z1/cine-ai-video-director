@@ -9,7 +9,7 @@ const { test } = require('node:test');
 
 const source = path.resolve(__dirname, '..');
 const installer = path.join(source, 'bin', 'install.cjs');
-const content = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests'];
+const content = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests', 'README.md', 'docs'];
 
 function run(root) {
   return spawnSync(process.execPath, [installer, '--skills-root', root], { encoding: 'utf8' });
@@ -27,6 +27,8 @@ test('fresh install, repeat install, and local edit protection', () => workspace
   assert.equal(run(root).status, 0);
   assert.equal(run(root).status, 0);
   assert.match(fs.readFileSync(path.join(target, 'SKILL.md'), 'utf8'), /cinematic-storyboard/);
+  assert.ok(fs.existsSync(path.join(target, 'docs', 'USAGE.md')));
+  assert.ok(fs.existsSync(path.join(target, 'docs', 'diagram', 'workbench-map.svg')));
   assert.equal(fs.readdirSync(path.join(target, 'assets', 'visual-style-atlas', 'images')).length, 53);
   fs.appendFileSync(path.join(target, 'SKILL.md'), '\n本地修改\n');
   const result = run(root);

@@ -48,7 +48,8 @@ def record_review_status(record):
     return 'unknown'
 
 def is_permission(record):
-    return record.get('kind') == 'decision' and record.get('data', {}).get('decision_type') in PERMISSION_TYPES
+    return (record.get('kind') == 'decision' and record.get('data', {}).get('decision_type') in PERMISSION_TYPES
+            and record.get('data', {}).get('planning_only') is not True)
 
 def current_routes(doc):
     latest={}
@@ -217,6 +218,7 @@ def validate_production_path_decision(r):
         if not isinstance(d.get(key),str) or not d[key].strip():raise ValueError('投产路径决定缺少 '+key)
     if d.get('recommended_path') and d['recommended_path'] not in ('direct_platform','previs_reference'):
         raise ValueError('推荐路线须为直投或先白模预演')
+    if 'planning_only' in d and type(d['planning_only']) is not bool:raise ValueError('planning_only须为布尔值')
     path=d['path']
     if path not in ('direct_platform','previs_reference','blender_previs','hybrid'):raise ValueError('未知投产路径')
     if not r['shot_ids']:raise ValueError('投产路径决定须覆盖本批镜头')
@@ -243,6 +245,31 @@ def validate_production_path_decision(r):
     expected={'direct_platform'} if path=='direct_platform' else {'previs_reference'} if path in PREVIS_PATHS else {'direct_platform','previs_reference'}
     if kinds!=expected:raise ValueError('投产路径类型与逐镜分配不一致')
 
+def validate_generation_recommendation(r):
+    d=r['data']
+    if d.get('decision_type')!='generation_recommendation' or 'planning_version' not in d:return
+    if d['planning_version']!=1:raise ValueError('不支持的生成建议版本')
+    if not r['shot_ids']:raise ValueError('生成建议须关联实际镜头')
+    evidence=d.get('method_evidence',{})
+    if not isinstance(evidence,dict) or evidence.get('status') not in ('queried','reused','no_match','unavailable','user_specified') or not str(evidence.get('summary','')).strip():
+        raise ValueError('生成建议须记录实际资料匹配结果与理由')
+    if evidence['status'] in ('queried','reused'):
+        sources=evidence.get('sources',[])
+        if not isinstance(sources,list) or not sources or any(not isinstance(s,dict) or not all(isinstance(s.get(k),str) and s[k].strip() for k in ('url','checked_at','applied','limits')) for s in sources):
+            raise ValueError('已查询或复用依据须有来源、日期、借用方法及适用限制')
+    options=d.get('options',[])
+    if not isinstance(options,list) or not options:raise ValueError('生成建议缺少具体方案')
+    ids=[]
+    for option in options:
+        if not isinstance(option,dict) or not all(isinstance(option.get(k),str) and option[k].strip() for k in ('id','path','model','platform','input_mode','reason','inputs','limits')):
+            raise ValueError('方案须说明id、路线、模型、平台、输入方式、素材、理由与限制')
+        if option['path'] not in ('direct_platform','previs_reference'):raise ValueError('未知建议路线')
+        if option['path']=='previs_reference' and not option.get('tool'):raise ValueError('预演方案须注明工具')
+        ids.append(option['id'])
+    if len(ids)!=len(set(ids)):raise ValueError('方案ID重复')
+    if sum(o.get('recommended') is True for o in options)!=1:raise ValueError('生成建议须有一个主推荐')
+
+
 def validate_image_stage_decision(r):
     """Record the user's permission to enter image asset and storyboard-image work."""
     d=r['data']
@@ -266,7 +293,8 @@ def package_path_issues(doc,r,root,records):
     choice=decision['data']
     latest=current_routes(doc)
     if any(latest.get(sid,{}).get('id')!=rid for sid in r['shot_ids']):issues.append('相关镜头已有更新的路线选择，须采用当前决定')
-    if choice.get('platform') and d.get('platform')!=choice['platform']:issues.append('当前平台与本批已选平台不一致')
+    for key in ('platform','model','input_mode'):
+        if choice.get(key) and d.get(key)!=choice[key]:issues.append('当前'+key+'与本批已选组合不一致')
     if batch!=choice.get('batch_id'):
         issues.append('投产路径选择不属于当前批次')
     if not choice.get('selection_evidence'):issues.append('投产路径缺少用户选择依据')
@@ -350,7 +378,7 @@ def _is_stale(doc,r,root,visiting=None):
     if r.get('data',{}).get('decision_type')=='generation_recommendation' and not r['data'].get('partial_scope'):
         expected={sid for sec in doc['sections'] if sec['id'] in r['section_ids'] and sec['id'] not in cancelled_sections(doc) for sid in shot_ids(sec)}
         if expected!=set(r['shot_ids']):return True
-    if is_permission(r):
+    if is_permission(r) or r.get('data',{}).get('decision_type')=='production_path':
         # Permission is a scoped user decision, not a snapshot of the creative draft.
         current = {s['id'] for sec in doc['sections'] if sec['id'] not in cancelled_sections(doc)
                    for group in sec['groups'] for s in group['shots']}
@@ -408,6 +436,7 @@ def put_record(doc,item,root):
     if not isinstance(r['data'],dict) or not isinstance(r['files'],list):raise ValueError('data/files格式错误')
     validate_production_path_decision(r)
     validate_image_stage_decision(r)
+    validate_generation_recommendation(r)
     if r['kind']=='decision' and r['data'].get('decision_type')=='sequence_review':
         data=r['data']
         if data.get('result') not in ('ready','revise') or not isinstance(data.get('summary'),str) or not data['summary'].strip():
@@ -1023,6 +1052,13 @@ def production_markdown(doc,root,render_storyboard):
                 lines += [f"共用资料：[参见 {r['title']}](#{anchor})",''];continue
             rendered.add(r['id'])
             lines += [f'<a id="{anchor}"></a>','', '### '+r['title'],'',r['body'],'']
+            if r.get('data',{}).get('decision_type')=='generation_recommendation':
+                for option in r['data'].get('options',[]):
+                    lines += ['- '+cell(option.get('label') or option.get('id') or option.get('path'))+'：'+cell(' / '.join(str(option.get(k) or '') for k in ('model','platform','input_mode')))+'；'+cell(option.get('reason',''))+'；输入：'+cell(option.get('inputs',''))+'；限制：'+cell(option.get('limits','')),'']
+                evidence=r['data'].get('method_evidence',{})
+                if evidence:lines += ['制作依据：'+cell(evidence.get('status'))+'；'+cell(evidence.get('summary')),'']
+            if r.get('data',{}).get('decision_type')=='production_path':
+                lines += ['当前选择：'+cell(' / '.join(str(r['data'].get(k) or '') for k in ('path','model','platform','input_mode')))+'；'+('方案已选，阶段与提交权限另计。' if r['data'].get('planning_only') else '沿当前制作范围执行。'),'']
             if r['kind']=='result':
                 d=r['data'];lines += ['结果状态：'+str(d.get('status','待核查'))+('；已采用镜头：'+', '.join(d.get('adopted_shot_ids',[])) if d.get('status')=='partially_adopted' else ''),'']
             if r['kind'] in ('asset','grid','voice','previs','package') and is_stale(doc,r,root):
@@ -1121,6 +1157,34 @@ def _preview_rows(doc,root):
     return rows
 
 
+def next_actions(doc, root, sec, phase, related, adopted):
+    ids=set(shot_ids(sec));actions=[]
+    plans=[r for r in active_records(doc) if r.get('data',{}).get('decision_type')=='generation_recommendation'
+           and record_review_status(r)!='excluded' and ids.intersection(r['shot_ids'])]
+    current={sid for r in plans if not is_stale(doc,r,root) for sid in r['shot_ids']}
+    routes=current_routes(doc)
+    missing=ids-current
+    if missing:
+        actions.append({'code':'assess_route','shot_ids':sorted(missing),
+            'text':'评估或同步受影响范围的模型、平台、输入方式与素材缺口；复用有效依据，已有选择不自动撤销。'})
+    if ids <= adopted:
+        actions.append({'code':'adopted','text':'当前范围已有采用视频，按用户反馈处理；已定超分选择不重复询问。'})
+    elif phase==0:
+        actions.append({'code':'design','text':'完善当前文字与拍法，连同路线和素材建议一起呈现；已有决定直接沿用。'})
+    elif phase==1:
+        if any(row['status']!='adopted' for row in related):
+            actions.append({'code':'inputs','text':'按已选方式补齐或修订必要输入；无图路径无需出图，变更只更新实际依赖，不退回重新确认。'})
+        elif not sequence_receipt(doc,{'section_ids':[sec['id']]}):
+            actions.append({'code':'sequence_review','text':'图稿已采用，完成本批尚未进行的一次整段预演与审查。'})
+        else:
+            actions.append({'code':'prepare','text':'沿有效方案准备准确视频输入；人工修订不重启整段审查。'})
+    else:
+        actions.append({'code':'prepare_or_review','text':'准备或同步准确输入；已有生成任务则核对实际结果。沿已定提交分工，不重复提交。'})
+    if phase and any(sid not in routes or record_review_status(routes[sid])=='excluded' for sid in ids):
+        actions.append({'code':'select_route','text':'仅补尚未选择或新控制需求涉及的路线，不重选无关范围。'})
+    return actions
+
+
 def workflow_status(doc, root, rows=None):
     """A view of scoped work, never a second authorization state machine."""
     rows = preview_rows(doc,root) if rows is None else rows
@@ -1132,6 +1196,7 @@ def workflow_status(doc, root, rows=None):
                     and r['data'].get('selection_evidence') for sid in r['section_ids']}
     entered_video={sid for r in active_records(doc) if is_permission(r) and r['data'].get('decision_type') in ('production_path','video_preparation_entry')
                    and record_review_status(r)!='excluded' and r['data'].get('selection_evidence') for sid in r['section_ids']}
+    entered_video.update(sid for r in active_records(doc) if r['kind'] in ('package','task','result') and record_review_status(r)!='excluded' for sid in r['section_ids'])
     adopted_videos=video_adopted_shots(doc,root)
     scopes=[]
     for sec in doc['sections']:
@@ -1161,7 +1226,8 @@ def workflow_status(doc, root, rows=None):
         if ids <= adopted_videos:
             phase=2;title='视频素材已采用';detail='当前范围已有采用结果；可选超分不影响原片完成。'
         scopes.append({'section_id':sec['id'],'title':sec['title'],'phase':phase,'status':title,'detail':detail,
-                       'ready_shots':ready,'review_shots':review,'shot_count':len(ids)})
+                       'ready_shots':ready,'review_shots':review,'shot_count':len(ids),
+                       'next_actions':next_actions(doc,root,sec,phase,related,adopted_videos)})
     phase=max((s['phase'] for s in scopes),default=0)
     mixed=len({s['phase'] for s in scopes})>1
     title='各段分别推进' if mixed else scopes[0]['status'] if len(scopes)==1 else ('文字分镜','图片资产与分镜图','视频制作与返修')[phase]

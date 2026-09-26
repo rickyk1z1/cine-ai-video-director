@@ -170,7 +170,7 @@ function renderViewNavigation(){
 function renderImagePreview(){
  clearTimeout(rehearsalTimer);
  const root=$('image-preview');root.replaceChildren();
- const heading=el('div',{class:'preview-heading'});heading.append(el('h1',{},'分镜图预览'),el('p',{},'按当前分镜顺序展示，每张图独立编号；待选、已采用和需复核分别标明。'));root.append(heading);renderSequencePlan(root);
+ const heading=el('div',{class:'preview-heading'});heading.append(el('h1',{},'分镜图预览'),el('p',{},'按当前分镜顺序展示，每张图独立编号；待选、已采用和需复核分别标明。'));root.append(heading);renderSequencePlan(root);renderGenerationInputs(root);
  const ordered=el('section',{'aria-label':'按镜号排列的分镜图',class:'preview-sequence'});root.append(ordered);
  const rows=(doc._preview_rows||[]).filter(row=>row.images?.length);
  if(!rows.length){ordered.append(el('p',{class:'empty'},'还没有已登记的分镜图。'));return;}
@@ -203,13 +203,30 @@ function renderImagePreview(){
   ordered.append(card);
  }
 }
-function renderSequencePlan(root){
+function renderGenerationInputs(root){
+ const packages=activeRecords().filter(r=>r.kind==='package'&&doc._record_states?.[r.id]?.status!=='excluded');
+ if(!packages.length)return;
+ const section=el('section',{'aria-label':'实际生成输入',class:'sequence-review-panel'});
+ section.append(el('h2',{},'当前准备的生成输入'),el('p',{class:'review-note'},'以下来自当前生成包，与供审阅的图序分开。实际节点写入和提交仍以回读记录为准。'));
+ for(const pack of packages){
+  const d=pack.data||{},card=el('article',{class:'generation-plan'});
+  card.append(el('h3',{},pack.title),el('p',{},[d.model,d.platform,d.input_mode||d.mode].filter(Boolean).join(' · ')));
+  if(doc._record_states?.[pack.id]?.stale)card.append(el('p',{class:'review-note'},'依据已有修改，本包待同步；保留原输入供回查。'));
+  const list=el('ul');for(const ref of d.references||[])list.append(el('li',{},[ref.label,ref.purpose,ref.file_path].filter(Boolean).join(' — ')));
+  if(!(d.references||[]).length)list.append(el('li',{},'本包没有上传参考附件。'));
+  card.append(list);
+  if(d.prompt){const details=el('details');details.append(el('summary',{},'查看本包准确提示词'),el('p',{class:'creative-text'},d.prompt));card.append(details);}
+  section.append(card);
+ }
+ root.append(section);
+}
+function renderSequencePlan(root,includeReview=true){
  const records=activeRecords(),reviews=records.filter(r=>r.data?.decision_type==='sequence_review'&&doc._record_states?.[r.id]?.status!=='excluded');
  const plans=records.filter(r=>r.data?.decision_type==='generation_recommendation'&&doc._record_states?.[r.id]?.status!=='excluded');
  const block=el('section',{class:'sequence-review-panel','aria-label':'整段审查与生成建议'});
- const head=el('div',{class:'preview-heading'});head.append(el('h2',{},'整段预演与生成建议'),button('播放分镜预演',()=>openRehearsal(block),'secondary'));block.append(head);
- if(!reviews.length)block.append(el('p',{class:'review-note'},'图稿确认后，助手完成本批一次整段审查，并在这里汇总生成建议。'));
- for(const record of reviews){
+ const head=el('div',{class:'preview-heading'});head.append(el('h2',{},includeReview?'整段预演与生成建议':'模型路线与所需素材'));if(includeReview)head.append(button('播放分镜预演',()=>openRehearsal(block),'secondary'));block.append(head);
+ if(includeReview&&!reviews.length)block.append(el('p',{class:'review-note'},'图稿确认后，助手完成本批一次整段审查，并在这里汇总生成建议。'));
+ for(const record of includeReview?reviews:[]){
   const card=el('article',{class:'sequence-summary'});card.append(el('h3',{},'整段审查已完成'),el('p',{class:'creative-text'},record.data.summary||record.body));
   if(record.data.result==='revise')card.append(el('p',{class:'review-note'},'审查已给出调整建议；人工修改后直接更新图稿与生成建议，不再启动审查环节。'));
   if(doc._record_states?.[record.id]?.stale)card.append(el('p',{class:'review-note'},'此后有方案修订。保留这次审查记录，当前人工方案优先；原判断不冒充覆盖新版本。'));
@@ -221,18 +238,18 @@ function renderSequencePlan(root){
  for(const plan of plans){
   const data=plan.data||{},card=el('article',{class:'generation-plan'}),stale=doc._record_states?.[plan.id]?.stale;
   const completed=Boolean(doc._sequence_receipts?.[plan.id]);
-  card.append(el('h3',{},completed?'本批生成方案':'初步生成思路'),el('p',{class:'creative-text'},plan.body||''));
+  card.append(el('h3',{},completed?'本批生成方案':'文字分镜与制作方案'),el('p',{class:'creative-text'},plan.body||''));
   if(stale)card.append(el('p',{class:'review-note'},'镜头已有调整，助手需同步受影响的生成建议；已有路线不会因此撤销。'));
   const groups=Array.isArray(data.groups)?data.groups:[];
   if(groups.length){
    const table=el('table',{class:'generation-table'}),thead=el('thead'),tr=el('tr');
    for(const title of ['镜头范围','建议方式','效果与选择理由','输入、成本与限制'])tr.append(el('th',{},title));thead.append(tr);table.append(thead);
    const body=el('tbody'),shots=new Map(doc.sections.flatMap(sec=>sec.groups.flatMap(g=>g.shots.map(sh=>[sh.id,sh.number||sh.id]))));
-   for(const group of groups){const row=el('tr');row.append(el('td',{},(group.shot_ids||[]).map(id=>shots.get(id)||id).join('、')),el('td',{},[group.input_mode,group.model].filter(Boolean).join(' · ')),el('td',{},group.reason||''),el('td',{},[group.inputs,group.cost,group.limits].filter(Boolean).join('；')));body.append(row);}
+   for(const group of groups){const row=el('tr');row.append(el('td',{},(group.shot_ids||[]).map(id=>shots.get(id)||id).join('、')),el('td',{},[group.input_mode,group.model,group.platform].filter(Boolean).join(' · ')),el('td',{},group.reason||''),el('td',{},[group.inputs,group.cost,group.limits].filter(Boolean).join('；')));body.append(row);}
    table.append(body);card.append(table);
   }
   const options=Array.isArray(data.options)?data.options:[];
-  if(completed||data.review_basis==='text_only'){
+  if(options.length){
    const routes=el('div',{class:'generation-routes'});
    const selected=(plan.shot_ids||[]).map(id=>doc._current_routes?.[id]?.path);
    const chosen=selected.length&&selected.every(path=>path&&path===selected[0])?selected[0]:null;
@@ -240,19 +257,23 @@ function renderSequencePlan(root){
     const route=el('article',{class:'generation-route'});route.append(el('h4',{},option.label||(option.path==='direct_platform'?'直接去平台生成':'先 Blender 预演，再平台生成')));
     if(option.recommended)route.append(el('span',{class:'badge'},'推荐'));
     route.append(el('p',{},option.reason||''));if(option.tradeoff)route.append(el('p',{class:'review-note'},option.tradeoff));
-    const choose=button(chosen===option.path?'已选此路线':'选择此路线',()=>chooseRoute(plan.id,option.path),chosen===option.path?'secondary':'primary');choose.disabled=stale||chosen===option.path;route.append(choose);routes.append(route);
+    const isChosen=option.id?(plan.shot_ids||[]).every(id=>doc._current_routes?.[id]?.option_id===option.id&&doc._current_routes?.[id]?.record_id==='route-'+plan.id):chosen===option.path;
+    route.append(el('p',{},[option.model,option.platform,option.input_mode].filter(Boolean).join(' · ')));
+    if(option.inputs)route.append(el('p',{},'所需输入：'+option.inputs));if(option.limits)route.append(el('p',{class:'review-note'},option.limits));
+    const choose=button(isChosen?'已选此方案':'选择此方案',()=>chooseRoute(plan.id,option.path,option.id),isChosen?'secondary':'primary');choose.disabled=stale||isChosen;route.append(choose);routes.append(route);
    }
    card.append(routes,el('p',{class:'review-note'},'这里记录生成方式，不会点击平台生成或消耗积分。已选择后，在对话中继续即可沿用。'));
   }else card.append(el('p',{class:'review-note'},'这里只提供随设计更新的初步建议，现在不要求选路线。'));
+  if(data.method_evidence){const evidence=el('details');evidence.append(el('summary',{},'制作依据 · '+({queried:'本轮查询',reused:'复用依据',no_match:'无匹配案例',unavailable:'来源不可用',user_specified:'用户指定'}[data.method_evidence.status]||'待核')),el('p',{},data.method_evidence.summary||''));for(const source of data.method_evidence.sources||[]){const p=el('p',{},[source.checked_at,source.applied,source.limits].filter(Boolean).join('；'));if(/^https?:\/\//i.test(source.url||''))p.append(el('a',{href:source.url,target:'_blank',rel:'noopener'},'查看来源'));evidence.append(p);}card.append(evidence);}
   block.append(card);
  }
  root.append(block);
 }
-async function chooseRoute(recommendationId,path){
+async function chooseRoute(recommendationId,path,optionId){
  await save();if(dirty||saving||blocked){notice('请先保存修改并处理冲突。');return;}
  const sentVersion=version,snapshot=clone(doc);saving=true;state('正在记录路线…');
  try{
-  const result=await api('/api/routes/choose',{recommendation_id:recommendationId,path,expected_revision:savedRevision});
+  const result=await api('/api/routes/choose',{recommendation_id:recommendationId,path,option_id:optionId,expected_revision:savedRevision});
   let merged;
   try{merged=version===sentVersion?result:{...result,...mergePending(editableSnapshot(snapshot),editableSnapshot(doc),editableSnapshot(result))};}
   catch(error){blocked=true;persist();throw error;}
@@ -403,7 +424,8 @@ function renderWorkflowStage(){
   copy.append(el('strong',{},label),el('small',{},caption));li.append(el('span',{class:'stage-marker','aria-hidden':'true'},String(index+1)),copy);list.append(li);
  });
  root.append(top,list);root.dataset.phase=String(phase);
- if(workflow.scopes?.length>1){const summary=el('details');summary.append(el('summary',{},'各段当前工作'));for(const scope of workflow.scopes)summary.append(el('p',{},scope.title+'：'+scope.status));root.append(summary);}
+ if(workflow.scopes?.length===1){const actions=el('ul',{'aria-label':workflow.scopes[0].title+'下一步'});for(const action of workflow.scopes[0].next_actions||[])actions.append(el('li',{},action.text));root.append(actions);}
+ if(workflow.scopes?.length>1){const summary=el('details');summary.append(el('summary',{},'各段当前工作'));for(const scope of workflow.scopes){summary.append(el('p',{},scope.title+'：'+scope.status));for(const action of scope.next_actions||[])summary.append(el('p',{class:'review-note'},action.text));}root.append(summary);}
 }
 
 function render(){
@@ -411,6 +433,7 @@ function render(){
  const source=el('section',{class:'source-panel','aria-label':'对应原文'});
  source.append(el('h2',{},'对应原文'),editField(doc,'source_text','对应原文',{placeholder:'粘贴这段分镜所依据的原文；若只有创意想法，可留空。'}));
  head.append(source);
+ renderSequencePlan(head,false);
  head.append(el('section',{id:'review',class:'creative-review','aria-label':'构建思路与导演建议'}));head.append(contextNotes(doc,'范围与补充说明','brief','brief-panel'));root.append(head);
  doc.sections.forEach((s,si)=>{
   const sec=el('section',{class:'section',id:s.id}),h=el('div',{class:'section-heading'}),number=el('span',{class:'section-index'},String(si+1).padStart(2,'0'));number.append(el('small',{},'段落'));h.append(number,titleInput(s,'title','段落标题'),listTools(doc.sections,si,'段落'));

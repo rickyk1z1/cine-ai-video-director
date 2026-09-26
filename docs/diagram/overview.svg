@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 570" role="img" aria-labelledby="title desc">
+<title id="title">Cinematic Storyboard：从想法到可制作的画面</title>
+<desc id="desc">你决定创作意图与采用结果；助手负责分镜、路线、素材和提示词；工作台保存当前内容、选择及下一步。素材生成在实际可用的平台完成。</desc>
+<defs><pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#243347" stroke-width=".6"/></pattern><marker id="arrow" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="none" stroke="#64748b" stroke-width="1.4"/></marker></defs>
+<style>text{font-family:'PingFang SC','Noto Sans SC','Microsoft YaHei',sans-serif}.title{font-size:42px;font-weight:700;fill:#f8fafc}.small{font-size:19px;fill:#aab9ce}.name{font-size:26px;font-weight:650;fill:#f8fafc}.body{font-size:20px;fill:#cbd5e1}.cap{font-size:14px;font-weight:600;letter-spacing:2px}</style>
+<rect width="1200" height="570" rx="24" fill="#0f172a"/><rect width="1200" height="570" rx="24" fill="url(#grid)"/>
+<text x="48" y="54" class="cap" fill="#67e8f9">CINEMATIC STORYBOARD</text><text x="48" y="115" class="title">从一个想法，到可制作的画面。</text><text x="48" y="157" class="small">文字分镜 · 视觉方向 · 模型路线 · 素材与提示词 · 视频返修</text>
+<path d="M389 331H421M779 331H811" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="48" y="205" width="330" height="255" rx="16" fill="#163346" stroke="#22d3ee"/>
+<circle cx="94" cy="253" r="20" fill="none" stroke="#67e8f9" stroke-width="2"/><path d="M75 294Q94 272 113 294" fill="none" stroke="#67e8f9" stroke-width="2"/>
+<text x="78" y="336" class="name">你决定要表达什么</text><text x="78" y="379" class="body">提出意图，讨论关键取舍</text><text x="78" y="413" class="body">审阅方案，选择采用结果</text>
+<rect x="435" y="205" width="330" height="255" rx="16" fill="#143b35" stroke="#34d399"/>
+<rect x="467" y="236" width="65" height="45" rx="5" fill="none" stroke="#6ee7b7" stroke-width="2"/><path d="M477 267L492 251L502 260L520 244" fill="none" stroke="#6ee7b7" stroke-width="2"/>
+<text x="465" y="336" class="name">助手把想法变成方案</text><text x="465" y="379" class="body">设计拍法，选路线，补输入</text><text x="465" y="413" class="body">写提示词，核对结果并返修</text>
+<rect x="822" y="205" width="330" height="255" rx="16" fill="#30234b" stroke="#a78bfa"/>
+<rect x="855" y="236" width="64" height="47" rx="5" fill="none" stroke="#c4b5fd" stroke-width="2"/><path d="M855 247H919M873 247V283" stroke="#c4b5fd" stroke-width="2"/><path d="M881 256H908M881 266H901" stroke="#c4b5fd" stroke-width="2"/>
+<text x="852" y="336" class="name">工作台让进度看得见</text><text x="852" y="379" class="body">内容、选择与素材放在一起</text><text x="852" y="413" class="body">保存当前状态，明确下一步</text>
+<text x="48" y="519" class="small">可以从想法、现成图片或已有视频开始；按实际需要进入相应工作。</text>
+</svg>
