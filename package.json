@@ -1,11 +1,11 @@
 {
-  "name": "cinematic-storyboard",
-  "version": "3.1.0",
+  "name": "cine-ai-video-director",
+  "version": "3.2.0",
   "private": true,
   "license": "UNLICENSED",
-  "description": "从想法、分镜到 AI 视频素材的创作 Skill，附本地工作台与中文使用手册",
+  "description": "🎬 从想法、分镜到 AI 视频素材的导演 Skill，附本地工作台与中文图文手册",
   "bin": {
-    "cinematic-storyboard-install": "bin/install.cjs"
+    "cine-ai-video-director": "bin/install.cjs"
   },
   "files": [
     "SKILL.md",
@@ -24,5 +24,20 @@
   ],
   "engines": {
     "node": ">=20"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rickyk1z1/cine-ai-video-director.git"
+  },
+  "homepage": "https://github.com/rickyk1z1/cine-ai-video-director#readme",
+  "bugs": {
+    "url": "https://github.com/rickyk1z1/cine-ai-video-director/issues"
+  },
+  "keywords": [
+    "codex",
+    "skill",
+    "ai-video",
+    "storyboard",
+    "video-director"
+  ]
 }

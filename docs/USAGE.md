@@ -1,4 +1,4 @@
-# cinematic-storyboard 中文使用手册
+# 🎬 Cine AI Video Director 中文使用手册
 
 这份手册按实际制作顺序说明：从哪里开始，每个阶段为什么要做，你需要决定什么，以及怎样继续。第一次使用可以从头阅读；已有项目时，直接找对应环节。
 
@@ -27,21 +27,23 @@
 
 ### 安装或更新
 
-先确保终端中的 Git 可以访问 `rickyk1z1/cinematic-storyboard`，再执行：
+先确保终端中的 Git 可以访问 `rickyk1z1/cine-ai-video-director`，再执行：
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cinematic-storyboard#v3.1.0 -- cinematic-storyboard-install
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director
 ```
 
-命令固定到一个已发布版本，便于不同机器使用同一套规则。安装器会输出实际安装目录：如果只有一个现有同名 Skill，优先沿用；全新安装默认使用 `~/.agents/skills/cinematic-storyboard`。
+命令固定到一个已发布版本，便于不同机器使用同一套规则。安装器会输出实际安装目录：如果检测到唯一的旧名 `cinematic-storyboard` 安装，会先核对安装记录与文件，再迁移到同一安装根的新名称目录；已有新名则直接更新。全新安装默认使用 `~/.agents/skills/cine-ai-video-director`。
 
 若需要明确指定 Skill 的上一级目录，可以使用：
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cinematic-storyboard#v3.1.0 -- cinematic-storyboard-install --skills-root "$HOME/.codex/skills"
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director --skills-root "$HOME/.codex/skills"
 ```
 
-不要同时维护两份现役同名 Skill。安装器发现多个位置或无法确认的本地修改会停止，旧文件会保留。让助手核对差异后再更新，不要通过删除目录绕过保护。
+不要同时维护新旧名称的两份现役 Skill。旧安装有本地改动或缺少可核对的安装记录时，安装器会保留它并停止，不会直接覆盖。安装器发现多个位置或无法确认的本地修改会停止，旧文件会保留。让助手核对差异后再更新，不要通过删除目录绕过保护。
+
+分享给朋友的权限配置见[私有分享说明](SHARING.md)。
 
 安装完成后新开一个 Codex 对话；未加载到 Skill 时重启 Codex。把视频项目放在你希望长期保存资料的位置，后续继续使用同一目录。工作台数据与生成素材属于项目，不放进 Skill 安装目录。
 
@@ -292,22 +294,22 @@ H3、即梦 / Seedance、可灵是重点考虑的模型方向，不代表每段�
 先把 Skill 路径改成安装器实际输出的位置，把项目路径改成你希望长期保存资料的目录：
 
 ```sh
-CINEMATIC_SKILL_DIR="$HOME/.agents/skills/cinematic-storyboard"
-CINEMATIC_PROJECT_DIR="$PWD/my-storyboard"
+CINE_DIRECTOR_SKILL_DIR="$HOME/.agents/skills/cine-ai-video-director"
+CINE_DIRECTOR_PROJECT_DIR="$PWD/my-storyboard"
 ```
 
 仅新建空项目时执行一次：
 
 ```sh
-python3 "$CINEMATIC_SKILL_DIR/scripts/storyboard.py" create \
-  --directory "$CINEMATIC_PROJECT_DIR" --title "我的短片"
+python3 "$CINE_DIRECTOR_SKILL_DIR/scripts/storyboard.py" create \
+  --directory "$CINE_DIRECTOR_PROJECT_DIR" --title "我的短片"
 ```
 
 打开已有项目或刚创建的项目：
 
 ```sh
-python3 "$CINEMATIC_SKILL_DIR/scripts/storyboard.py" open \
-  --directory "$CINEMATIC_PROJECT_DIR"
+python3 "$CINE_DIRECTOR_SKILL_DIR/scripts/storyboard.py" open \
+  --directory "$CINE_DIRECTOR_PROJECT_DIR"
 ```
 
 使用命令返回的本机地址打开浏览器。端口由实际服务决定，不固定为手册截图中的数字；已有项目不必再运行 `create`。这里创建的是本地制作数据，不会因此创建平台画布或提交媒体任务。
@@ -315,15 +317,15 @@ python3 "$CINEMATIC_SKILL_DIR/scripts/storyboard.py" open \
 查看当前状态与下一步：
 
 ```sh
-python3 "$CINEMATIC_SKILL_DIR/scripts/storyboard.py" current \
-  --directory "$CINEMATIC_PROJECT_DIR"
+python3 "$CINE_DIRECTOR_SKILL_DIR/scripts/storyboard.py" current \
+  --directory "$CINE_DIRECTOR_PROJECT_DIR"
 ```
 
 结束工作台服务：
 
 ```sh
-python3 "$CINEMATIC_SKILL_DIR/scripts/storyboard.py" stop \
-  --directory "$CINEMATIC_PROJECT_DIR"
+python3 "$CINE_DIRECTOR_SKILL_DIR/scripts/storyboard.py" stop \
+  --directory "$CINE_DIRECTOR_PROJECT_DIR"
 ```
 
 关闭服务不会删除项目。下次用同一路径 `open` 即可恢复；服务地址变化时使用新返回的地址。

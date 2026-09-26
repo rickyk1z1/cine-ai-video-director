@@ -1,8 +1,8 @@
 ---
-name: cinematic-storyboard
+name: cine-ai-video-director
 description: 将想法、文字或剧本制作成可审查分镜、角色场景资产、分镜图和AI视频素材，支持已有视频的定位与局部返修。用于专业视频的创作推敲、图片与视频投产交接；不负责后期剪辑、配乐、混音或成片包装。
 metadata:
-  version: "3.1.0"
+  version: "3.2.0"
 ---
 
 # 专业分镜与 AI 视频素材制作

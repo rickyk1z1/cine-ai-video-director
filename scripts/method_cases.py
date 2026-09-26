@@ -25,7 +25,7 @@ def lookup(action, query=None, slug=None, take=3, opener=urlopen):
         url=BASE+'/'+quote(slug,safe='')+('/retests' if action=='retests' else '')+'?locale=zh-CN'
     result={'url':url,'checked_at':datetime.now(timezone.utc).isoformat(),'external_reference':True}
     try:
-        with opener(Request(url,headers={'Accept':'application/json','User-Agent':'cinematic-storyboard/3.1'}),timeout=12) as response:
+        with opener(Request(url,headers={'Accept':'application/json','User-Agent':'cine-ai-video-director/3.2'}),timeout=12) as response:
             raw=response.read(MAX_BYTES+1)
         if len(raw)>MAX_BYTES:raise ValueError('response exceeds bounded read')
         data=json.loads(raw)

@@ -1,4 +1,4 @@
-# cinematic-storyboard
+# 🎬 Cine AI Video Director
 
 **把一个想法，逐步做成有明确拍法、可靠素材和生成提示词的 AI 视频。**
 
@@ -6,7 +6,7 @@
 
 ![你、助手与工作台如何共同完成制作](docs/diagram/overview.svg)
 
-[开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cinematic-storyboard/releases/tag/v3.1.0)
+[开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.2.0)
 
 ## 它帮你解决什么问题
 
@@ -31,14 +31,14 @@
 当前仓库为私有仓库。你的 Git 需要有访问权限；安装需要 **Node.js 20+**，工作台需要 **Python 3.10+** 和浏览器。
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cinematic-storyboard#v3.1.0 -- cinematic-storyboard-install
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director
 ```
 
-安装器优先使用唯一一个现有同名 Skill 的位置；新安装默认放在 `~/.agents/skills/cinematic-storyboard`。如果发现多个现役副本，或无法判断文件是否经过本地修改，会保留原文件并说明原因。
+安装器会识别旧名 `cinematic-storyboard`，核对无本地修改后迁移为新名，保留原安装根；已有新名安装会直接更新。新安装默认放在 `~/.agents/skills/cine-ai-video-director`。如果发现多个现役副本，或无法判断文件是否经过本地修改，会保留原文件并说明原因。
 
 安装后新开一个 Codex 对话；如果 Skill 尚未出现，重启 Codex。接下来直接描述需求即可：
 
-> 用 cinematic-storyboard 帮我做一条短片。我只有一个想法：桌上的纸鸟慢慢活过来，飞出窗外。材料还没准备，请先和我推敲表达方式、视觉风格和拍法，再推荐生成路线。
+> 用 cine-ai-video-director 帮我做一条短片。我只有一个想法：桌上的纸鸟慢慢活过来，飞出窗外。材料还没准备，请先和我推敲表达方式、视觉风格和拍法，再推荐生成路线。
 
 你不必自己填写制作数据表。助手会根据当前需求建立或打开工作台。已有分镜或视频时，也可以直接说“继续这份分镜”或“只修这条视频的 8–12 秒”。需要自行启动页面，见[启动命令](docs/USAGE.md#commands)。
 
@@ -88,6 +88,12 @@ flowchart TD
 
 项目数据保存在你选择的本地项目目录中，Skill 本身保存方法与工具。基础工作台和内置视觉图鉴可离线运行；在线案例检索、图片或视频生成需要相应网络、工具与账号，平台费用另计。
 
+## 分享给朋友
+
+项目保持私有，仅分享给你在 GitHub 中邀请的协作者。朋友先用自己的 GitHub 账号取得访问权限，配置好 Git 登录后，即可使用上面的同一条 npm 命令安装。这里的 npm 用于下载和运行私有 GitHub 安装包，不代表项目已发布到公开 npm。
+
+[查看邀请、登录、安装与更新步骤](docs/SHARING.md)。
+
 ## 继续阅读
 
 | 文档 | 适合什么时候看 |
@@ -98,6 +104,6 @@ flowchart TD
 | [模型与生成策略](references/generation-strategy.md) | 想了解为什么推荐某种输入方式或生成分组 |
 | [推进与修订规则](references/workflow-navigation.md) | 想了解局部修改怎样影响素材和下一步 |
 
-当前版本 **3.1.0** 把模型路线与素材建议提前到文字分镜讨论中，增加按需在线方法查询，并让当前工作、实际生成输入和局部修订的影响更清楚。详细操作以手册和实际工作台为准。
+当前版本 **3.2.0** 将项目统一命名为 **🎬 Cine AI Video Director**，支持旧名称安装迁移。原有模型路线规划、在线方法查询、工作台与局部修订流程保持不变。详细操作以手册和实际工作台为准。
 
 本仓库保持私有。内置视觉图鉴保留[图片来源记录](assets/visual-style-atlas/atlas.json)，供有仓库访问权的成员参考；仓库访问权限不代表获得其中第三方图片的公开转载或再分发许可。

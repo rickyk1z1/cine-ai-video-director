@@ -6,7 +6,7 @@
 <text x="40" y="94" class="small">布局示意，非截图。当前版采用顶部导航；右侧为本图的说明图例。</text>
 <rect x="40" y="125" width="775" height="624" rx="16" fill="#fff" stroke="#cddbd4"/>
 <path d="M56 125 H799 Q815 125 815 141 V229 H40 V141 Q40 125 56 125" fill="#173d3b"/>
-<text x="64" y="164" class="heading white">Cinematic · 我的短片</text>
+<text x="64" y="164" class="heading white">Cine AI · 我的短片</text>
 <rect x="505" y="142" width="280" height="35" rx="7" fill="#305651"/>
 <text x="520" y="165" font-size="16" class="white">查找段落 / 镜号</text>
 <text x="64" y="207" class="small white">分镜目录　2 个镜头组 · 5 个镜头　　开场 ① ②　旅程 ③ ④ ⑤</text>

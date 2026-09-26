@@ -1,6 +1,6 @@
 # 整包移植与运行条件
 
-分享或安装时复制整个 `cinematic-storyboard` 目录，不只复制 SKILL.md。主入口、参考、标准库服务、工作台界面和 `assets/visual-style-atlas` 一起保留。图库含28个方向、53张本地图片及来源记录；atlas.json是唯一数据源，浏览器数据与Markdown是派生文件。图片的原来源和使用范围说明继续有效。
+分享或安装时复制整个 `cine-ai-video-director` 目录，不只复制 SKILL.md。主入口、参考、标准库服务、工作台界面和 `assets/visual-style-atlas` 一起保留。图库含28个方向、53张本地图片及来源记录；atlas.json是唯一数据源，浏览器数据与Markdown是派生文件。图片的原来源和使用范围说明继续有效。
 
 程序以脚本自身位置寻找Skill资源，项目数据由调用时的 `--directory` 指定。没有固定用户名、Obsidian库位置、项目身份、画布、私有主机或内嵌凭据；新项目可以放在其他目录。测试目录、实例端口与运行锁由本次工作台管理，不作为接收者必须复现的个人环境。
 
@@ -16,7 +16,7 @@
 | Blender预演 | 接收者选择并安装的Blender、适用MCP/连接及本机能力；未选不加载 |
 | Topaz超分 | 接收者可用的Topaz应用与许可，按当前系统版本和实际界面适配；未选不阻挡素材采用 |
 
-在支持本地Skill的环境中安装目录后，调用名仍是 `cinematic-storyboard`。也可独立打开基础工作台：
+在支持本地Skill的环境中安装目录后，调用名仍是 `cine-ai-video-director`。也可独立打开基础工作台：
 
 ```text
 python <Skill目录>/scripts/storyboard.py create --directory <新项目目录> --title 示例项目

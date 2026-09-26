@@ -74,7 +74,7 @@ function totals(){
  if(latest&&Number(latest.data.proposed_duration_seconds)!==total)timing+=' · 新估约 '+latest.data.proposed_duration_seconds+' 秒（待同步）';
  const cancelled=cancelledSections(),allCancelled=doc.sections.length>0&&doc.sections.every(s=>cancelled.has(s.id));
  $('duration').textContent=allCancelled?'历史分镜 · '+shots.length+' 镜 · 无需制作':doc.sections.length+' 段落 · '+shots.length+' 镜 · '+timing;
- $('nav-count').textContent=shots.length+' 镜';$('rail-title').textContent=doc.title||'未命名分镜';document.title=(doc.title||'分镜工作台')+' · Cinematic';
+ $('nav-count').textContent=shots.length+' 镜';$('rail-title').textContent=doc.title||'未命名分镜';document.title=(doc.title||'分镜工作台')+' · Cine AI Video Director';
 }
 function renderNav(){
  const nav=$('navigation');nav.replaceChildren();if(!doc)return;
