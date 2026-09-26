@@ -1,6 +1,6 @@
 # Blender / MCP 执行规范（1.5）
 
-> 本地适配自TYGG AI Film Studio v3.2.7，详细技术参考，按[加载与输出映射](../tygg-reference-map.md)使用。现有主Skill的用户选择、确认节点、已采用声音及所选实现路径优先；不继承来源中的新增授权。版本/性能数字属于来源记录或启发式，执行时核对本机。
+> 详细技术参考，按[制作技术索引](../production-reference-map.md)选择本次需要的部分。当前分镜、已有决定、采用声音和所选路线优先；技术参数应在实际工具与版本中核对。
 
 
 本规范用于制作、修改和用户明确要求的 AI 检查。用户已认可当前模型与动画时，优先执行 [用户确认与视频提示词交付](../video-production.md)：直接进入交付，不自动进入任何验证档位；已有视频复用，缺少已约定参考视频时只完成必要导出，不把导出变成复核。
@@ -9,7 +9,7 @@
 
 只在确定进入 Blender 制作/修改/已约定的导出，或用户明确要求连接诊断、Blender 技术检查时，按 [MCP 连接与安装选择](blender-mcp-setup.md) 发现并验证连接。正常连接直接复用；缺失时区分安装、启用、客户端加载与实例选择问题，按用户选择提供步骤或代为安装配置，不统一重装。
 
-先发现工具名、参数、响应再读场景。TYGG记录的Blender Lab MCP v1.0.0映射如下（非本机连接证明）；其他版本重新发现。
+先发现工具名、参数、响应再读场景。Blender Lab MCP v1.0.0的接口映射如下，仅供定位（非本机连接证明）；其他版本重新发现。
 
 | 需求 | 官方工具 | 边界 |
 |---|---|---|
@@ -39,7 +39,7 @@ scene.patch、camera.keyframe、timeline.set_cuts、validate.scene、job.cancel�
 
 按 [联合路线](blocking-and-camera-paths.md) 声明 `motion_owner`。自主行进默认 Curve / Follow Path，保留可编辑控制点；纯搭乘采用已声明父级，静态无需 Curve。只对本批控制来源、切换和相关障碍做必要检查，避免双重位移。未支持的来源与无法读取的动画明确记未验证，不默认为空曲线或已通过。
 
-TYGG记录的Blender5.2实测GN修改器输入为 `getattr(modifier.properties.inputs, socket_identifier).value`；旧版常用 `modifier[socket_identifier]` 在5.2可能报“不支持IDProperties”。先查RNA并做版本适配，不猜Socket编号。接口默认值与实例修改器当前输入不是同一数据。修改参数后标记宿主对象update_tag并更新视层再测。在支持 layered Action 的版本中， 将 F-Curve 放在 `ActionLayer -> ActionKeyframeStrip -> ActionChannelbag`，不再直接读取 `Action.fcurves`；路径/root-motion 检查必须按对象的 `animation_data.action_slot` 读取对应 Channelbag，并保留旧版 Action 的兼容分支。
+已有技术记录中的Blender5.2 GN修改器输入为 `getattr(modifier.properties.inputs, socket_identifier).value`；旧版常用 `modifier[socket_identifier]` 在5.2可能报“不支持IDProperties”。先查RNA并做版本适配，不猜Socket编号。接口默认值与实例修改器当前输入不是同一数据。修改参数后标记宿主对象update_tag并更新视层再测。在支持 layered Action 的版本中， 将 F-Curve 放在 `ActionLayer -> ActionKeyframeStrip -> ActionChannelbag`，不再直接读取 `Action.fcurves`；路径/root-motion 检查必须按对象的 `animation_data.action_slot` 读取对应 Channelbag，并保留旧版 Action 的兼容分支。
 
 ## 分级验证、变更范围与缓存
 

@@ -1,6 +1,6 @@
 # 动作、表演与双人互动
 
-> 本地适配自TYGG AI Film Studio v3.2.7，详细技术参考，按[加载与输出映射](../tygg-reference-map.md)使用。现有主Skill的用户选择、确认节点、已采用声音及所选实现路径优先；不继承来源中的新增授权。版本/性能数字属于来源记录或启发式，执行时核对本机。
+> 详细技术参考，按[制作技术索引](../production-reference-map.md)选择本次需要的部分。当前分镜、已有决定、采用声音和所选路线优先；技术参数应在实际工具与版本中核对。
 
 
 先读取 `previs_profile.character_motion_scope`。已选本模板的新代理使用 `root_and_simple_bend`：一个圆柱＋一个球头，默认4骨骼支持坐、躺、起身等整体折弯；按 [尺寸与弯曲标准](character-proxy-standard.md) 执行即可。旧`root_and_torso_transform`、`root_translation_and_heading` / `structure_only`兼容读取，认可的旧工程不自动升级。驾驶/持物等需要可见接触时先读 [简化手部IK](contact-hand-ik.md)，该局部附件不要求改选完整人体。**本页其余详细人体骨架、步态、支撑脚、全身IK及完整身体表演，只供用户明确选择 `articulated_performance` 时读取执行。** 简易圆柱骨骼不构成详细表演授权，默认无需进入后续高级规范。

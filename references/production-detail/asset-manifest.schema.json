@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.local/blender-ai-previs/asset-manifest.schema.json",
-  "title": "TYGG AI Film Studio Asset Manifest",
+  "title": "Cine AI Video Director Asset Manifest",
   "type": "object",
   "required": ["schema_version", "id", "version", "source", "license", "units", "root_collection", "lods"],
   "properties": {

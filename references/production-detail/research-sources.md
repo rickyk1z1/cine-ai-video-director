@@ -1,6 +1,6 @@
 # 导演与动画来源索引
 
-> 本地适配自TYGG AI Film Studio v3.2.7，详细技术参考，按[加载与输出映射](../tygg-reference-map.md)使用。现有主Skill的用户选择、确认节点、已采用声音及所选实现路径优先；不继承来源中的新增授权。版本/性能数字属于来源记录或启发式，执行时核对本机。
+> 详细技术参考，按[制作技术索引](../production-reference-map.md)选择本次需要的部分。当前分镜、已有决定、采用声音和所选路线优先；技术参数应在实际工具与版本中核对。
 
 
 导演与动画资料访问日期：2026-09-08；视频参考提示词补充日期：2026-09-10。只将实际读取的公开正文/源码列为已读；网页中的影片、嵌入视频、付费课程和完整教材未观看/通读。以下是精炼的独立方法总结，不复制第三方Skill或教材。来源提供理论/实现依据，不能据此声称新场景已获电影级质量或实时验证。
@@ -64,7 +64,7 @@ R01–R06是创作者方法/工作流样本，其自称“大师法则”“成�
 | R01 | [Higgsfield generate](https://github.com/higgsfield-ai/skills/blob/fb18134b4aabe99c4bf7ff01c8f4883400efc80d/higgsfield-generate/SKILL.md)、[explainer](https://github.com/higgsfield-ai/skills/blob/fb18134b4aabe99c4bf7ff01c8f4883400efc80d/higgsfield-video-explainer/SKILL.md) | 素材职责、音画时间配对、分段交付；所读模块主要为生成服务编排，无Blender导演/步态求解实现。此判断不覆盖其全部产品。 | 根LICENSE MIT已读。 |
 | R02 | [漫剧老李](https://github.com/lixiaoxiao9888-create/manju-laoli-skill/blob/aa20fb60054ae52553a4b13f8810ed2fcd89ba70/short-drama-director/SKILL.md)、[空间俯视](https://github.com/lixiaoxiao9888-create/manju-laoli-skill/blob/aa20fb60054ae52553a4b13f8810ed2fcd89ba70/short-drama-director/references/spatial-topview-camera.md)、[因果节拍](https://github.com/lixiaoxiao9888-create/manju-laoli-skill/blob/aa20fb60054ae52553a4b13f8810ed2fcd89ba70/short-drama-director/references/screenplay-gate-engine.md) | 目标/阻碍/选择、每镜任务、演员与机位地图、攻防状态；去掉固定12节拍、必反杀、静止/侧拍/慢镜禁令及无直接出处的大师冠名。 | short-drama-director/LICENSE MIT已读，范围限该目录。 |
 | R03 | [MapleShaw Seedance](https://github.com/MapleShaw/seedance2.0-prompt-skill/blob/a2ab7fd9b73e1d531fabd7f59f390e8d39dc57a5/SKILL.md)、[camera-codec](https://github.com/MapleShaw/seedance2.0-prompt-skill/blob/a2ab7fd9b73e1d531fabd7f59f390e8d39dc57a5/references/camera-codec.md)、[storyboard-driven](https://github.com/MapleShaw/seedance2.0-prompt-skill/blob/a2ab7fd9b73e1d531fabd7f59f390e8d39dc57a5/references/storyboard-driven.md) | 分解相机描述、区分连续动作切片与切镜、保存失败边界；其Z/Y/X是提示词编码，不当世界坐标；不采用最多双轴、固定节奏公式或必裁首尾。 | 根LICENSE MIT已读。 |
-| R04 | [songguoxs Seedance](https://github.com/songguoxs/seedance-prompt-skill/blob/57d1e2f273747c238dd892698a05137ab2f10d4a/.claude/skills/seedance/SKILL.md) | 时间片、参考素材职责、声画分离及段间状态；平台语法/时长限制留给输出适配，不承担三维路线设计。 | README声明MIT；TYGG作者当时未找到独立LICENSE正文。 |
+| R04 | [songguoxs Seedance](https://github.com/songguoxs/seedance-prompt-skill/blob/57d1e2f273747c238dd892698a05137ab2f10d4a/.claude/skills/seedance/SKILL.md) | 时间片、参考素材职责、声画分离及段间状态；平台语法/时长限制留给输出适配，不承担三维路线设计。 | README声明MIT；历史审读时未找到独立LICENSE正文。 |
 | R05 | [jnMetaCode shortfilm](https://github.com/jnMetaCode/ai-shortfilm-prompts/blob/f21500e5946973949c6bbf02e67e0c21b2e63a35/skills/shortfilm-prompt/SKILL.md)、[NOTICE](https://github.com/jnMetaCode/ai-shortfilm-prompts/blob/f21500e5946973949c6bbf02e67e0c21b2e63a35/NOTICE) | 主体登记、镜头卡、画外信息、动作/情绪落点；纠正相同边缘进出的错误示例；不强制呼吸手持、无配乐、固定镜数/时长或瑕疵。 | MIT覆盖其原创；NOTICE区分保留权利的Mx-Shell原始提示词，未搬运提示词档案。 |
 | R06 | [fight-video-create-skill](https://github.com/qualsenWeb/fight-video-create-skill/blob/28ab4b658fe41cbd54842f470fd879c38e9c9737/SKILL.md) | 当前明确专注战斗剧情/动作/空间/分镜；吸收路线先行、动作结果持续、镜头意图与压力交接；不照搬固定动作密度、动态结尾、遮挡自动越轴。 | README明确无独立许可证；只研究、链接与独立总结，不复制原文入本Skill。 |
 

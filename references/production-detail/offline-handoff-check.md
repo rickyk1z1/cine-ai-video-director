@@ -1,9 +1,9 @@
 # SceneSpec离线检查与旧包兼容
 
-> 本地适配自TYGG AI Film Studio v3.2.7，详细技术参考，按[加载与输出映射](../tygg-reference-map.md)使用。现有主Skill的用户选择、确认节点、已采用声音及所选实现路径优先；不继承来源中的新增授权。版本/性能数字属于来源记录或启发式，执行时核对本机。
+> 详细技术参考，按[制作技术索引](../production-reference-map.md)选择本次需要的部分。当前分镜、已有决定、采用声音和所选路线优先；技术参数应在实际工具与版本中核对。
 
 
-当前视频包由storyboard.py package检查。下列--package结构仅为TYGG旧包兼容读取/测试，不作为当前投产格式；工程桥接见[接入说明](../previs-integration.md)。
+当前视频包由storyboard.py package检查。下列--package结构仅为既有包格式的兼容读取/测试，不作为当前投产格式；工程桥接见[接入说明](../previs-integration.md)。
 
 `scripts/previs/validate_handoff.py` 是仅用 Python 标准库的只读检查器。不启动 Blender、访问网络、生成媒体或改项目；用于首次写出较复杂的交付清单和 Skill 维护。它不作为每个短任务的强制阶段，更不在人工认可动画后重新审核画面。
 

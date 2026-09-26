@@ -6,7 +6,7 @@
 
 ![你、助手与工作台如何共同完成制作](docs/diagram/overview.svg)
 
-[开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.2.0)
+[开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.2.1)
 
 ## 它帮你解决什么问题
 
@@ -31,7 +31,7 @@
 当前仓库为私有仓库。你的 Git 需要有访问权限；安装需要 **Node.js 20+**，工作台需要 **Python 3.10+** 和浏览器。
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-ai-video-director
 ```
 
 安装器会识别旧名 `cinematic-storyboard`，核对无本地修改后迁移为新名，保留原安装根；已有新名安装会直接更新。新安装默认放在 `~/.agents/skills/cine-ai-video-director`。如果发现多个现役副本，或无法判断文件是否经过本地修改，会保留原文件并说明原因。
@@ -104,6 +104,6 @@ flowchart TD
 | [模型与生成策略](references/generation-strategy.md) | 想了解为什么推荐某种输入方式或生成分组 |
 | [推进与修订规则](references/workflow-navigation.md) | 想了解局部修改怎样影响素材和下一步 |
 
-当前版本 **3.2.0** 将项目统一命名为 **🎬 Cine AI Video Director**，支持旧名称安装迁移。原有模型路线规划、在线方法查询、工作台与局部修订流程保持不变。详细操作以手册和实际工作台为准。
+当前版本 **3.2.1** 将项目统一命名为 **🎬 Cine AI Video Director**，支持旧名称安装迁移，并以本项目的制作技术索引组织详细参考。原有模型路线规划、在线方法查询、工作台与局部修订流程保持不变。详细操作以手册和实际工作台为准。
 
 本仓库保持私有。内置视觉图鉴保留[图片来源记录](assets/visual-style-atlas/atlas.json)，供有仓库访问权的成员参考；仓库访问权限不代表获得其中第三方图片的公开转载或再分发许可。

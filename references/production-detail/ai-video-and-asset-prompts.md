@@ -3,7 +3,7 @@
 > 声音安排按[视频条数与声音计划](../sound-plan.md)执行；以下声音示例仅在相应制作范围与声部选择下适用。
 
 
-> 本地适配自TYGG AI Film Studio v3.2.7，详细技术参考，按[加载与输出映射](../tygg-reference-map.md)使用。现有主Skill的用户选择、确认节点、已采用声音及所选实现路径优先；不继承来源中的新增授权。版本/性能数字属于来源记录或启发式，执行时核对本机。
+> 详细技术参考，按[制作技术索引](../production-reference-map.md)选择本次需要的部分。当前分镜、已有决定、采用声音和所选路线优先；技术参数应在实际工具与版本中核对。
 
 
 本参考包含两个阶段：`asset_reference_export` 在 Blender 环境建模前生成/登记图片资产；`prompt_export` 在用户认可模型与动画后交付视频提示词。只读当前阶段所需部分。按 [用户确认与视频提示词交付](../video-production.md) 进入交付，不追加 AI 复核、碰撞检测、复核用渲染、全片播放或 Release；已约定参考视频的必要导出按 [视频交付](reference-video-delivery.md) 完成。
@@ -131,7 +131,7 @@
 
 没有视频时，记录 `reference_video_status: not_exported`。用户只要文字或明确不需要视频时交付无视频依赖的正文；任务已包含参考视频时完成必要导出，期间可先给明确标注“取得并上传素材后使用”的条件稿。计划标签不称为已绑定。文本、素材和生成结果分别记录，不用一个 `ready` 掩盖输入缺失；必要输出按 [视频交付](reference-video-delivery.md) 执行，不追加复核用渲染。
 
-机器记录统一写入当前package记录，完整prompt、references、parameters和timeline按[当前接口](../workbench.md)保存。旧generation_units/global_prompt等仅在接续已有TYGG资料时作字段映射，不建立第二份可编辑投产真源。复杂源时间映射写入previs工程数据，并与当前包的局部秒时间核对。
+机器记录统一写入当前package记录，完整prompt、references、parameters和timeline按[当前接口](../workbench.md)保存。旧generation_units/global_prompt等仅在接续既有格式资料时作字段映射，不建立第二份可编辑投产真源。复杂源时间映射写入previs工程数据，并与当前包的局部秒时间核对。
 
 ## 写作核对与按反馈修订
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.local/blender-ai-previs/scene-contract.schema.json",
-  "title": "TYGG AI Film Studio SceneSpec",
+  "title": "Cine AI Video Director SceneSpec",
   "type": "object",
   "required": ["schema_version", "project", "scene", "assets", "shots", "sequence", "events", "continuity", "budgets"],
   "properties": {

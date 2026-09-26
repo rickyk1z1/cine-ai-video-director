@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CHECKED = [ROOT / 'AGENTS.md', ROOT / 'SKILL.md', *ROOT.glob('agents/*.yaml'),
            *ROOT.glob('references/**/*.md'),
-           *(p for p in ROOT.glob('references/**/*.json') if p.name != 'tygg-provenance.json'),
+           *ROOT.glob('references/**/*.json'),
            *(p for p in ROOT.glob('assets/**/*') if p.suffix in ('.js','.html','.css')),
            *(p for p in ROOT.glob('scripts/**/*.py') if p.name != Path(__file__).name),
            *(p for p in ROOT.glob('tests/**/*.py') if p.name != 'test_portability.py')]

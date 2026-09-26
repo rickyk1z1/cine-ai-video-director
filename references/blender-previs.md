@@ -37,8 +37,8 @@
 
 参考视频负责布局、构图、路线、切点和已表达的事件；角色图负责身份服饰，场景图负责采用的外观属性，道具图负责形状材质，正式录音负责声音。逐项说明不继承代理几何、识别色和僵硬动作，未在白模表现的内容不能声称视频提供了参考。排除词不保证模型遵循，最终仍检查输出。
 
-来源：TYGG v3.2.7的 scene-blockout-and-camera-motion、blocking-and-camera-paths、interaction-choreography、previs-visual-contract 和 blender-mcp-execution 方法，经本次需求独立适配。官方实现入口见 [来源](sources.md)，运行前核对真实工具和版本。
+空间布局、相机路径、交互事件与执行检查按本包技术索引展开。官方实现入口见[资料来源](sources.md)，运行前核对真实工具和版本。
 
 ## 具体实现必读路由
 
-本页只管分支流程，实际制作按[加载表](tygg-reference-map.md)读尺寸/骨骼、接触IK、空间细节、联合路径或执行/性能相应部分。先通过[工程桥接](previs-integration.md)绑定当前范围的分镜与既有授权，局部修改不重新走整段文字确认；建模前读scene-contract、scene-blockout和blender-mcp-execution，人物需要尺度时读character-proxy-standard，可见接触读contact-hand-ik，路线读blocking-and-camera-paths；性能资料只在规模或负载确有需要时加载。Hyper3D仅为复杂静态对象的[可选来源](production-detail/hyper3d-scene-assets.md)，不是必经阶段。
+本页只管分支流程，实际制作按[加载表](production-reference-map.md)读尺寸/骨骼、接触IK、空间细节、联合路径或执行/性能相应部分。先通过[工程桥接](previs-integration.md)绑定当前范围的分镜与既有授权，局部修改不重新走整段文字确认；建模前读scene-contract、scene-blockout和blender-mcp-execution，人物需要尺度时读character-proxy-standard，可见接触读contact-hand-ik，路线读blocking-and-camera-paths；性能资料只在规模或负载确有需要时加载。Hyper3D仅为复杂静态对象的[可选来源](production-detail/hyper3d-scene-assets.md)，不是必经阶段。

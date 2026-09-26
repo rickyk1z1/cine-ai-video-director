@@ -30,7 +30,7 @@
 先确保终端中的 Git 可以访问 `rickyk1z1/cine-ai-video-director`，再执行：
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-ai-video-director
 ```
 
 命令固定到一个已发布版本，便于不同机器使用同一套规则。安装器会输出实际安装目录：如果检测到唯一的旧名 `cinematic-storyboard` 安装，会先核对安装记录与文件，再迁移到同一安装根的新名称目录；已有新名则直接更新。全新安装默认使用 `~/.agents/skills/cine-ai-video-director`。
@@ -38,7 +38,7 @@ npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-
 若需要明确指定 Skill 的上一级目录，可以使用：
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director --skills-root "$HOME/.codex/skills"
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-ai-video-director --skills-root "$HOME/.codex/skills"
 ```
 
 不要同时维护新旧名称的两份现役 Skill。旧安装有本地改动或缺少可核对的安装记录时，安装器会保留它并停止，不会直接覆盖。安装器发现多个位置或无法确认的本地修改会停止，旧文件会保留。让助手核对差异后再更新，不要通过删除目录绕过保护。

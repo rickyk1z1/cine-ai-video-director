@@ -35,7 +35,7 @@ git ls-remote https://github.com/rickyk1z1/cine-ai-video-director.git HEAD
 ## 一条命令安装
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-ai-video-director
 ```
 
 这条命令会下载指定版本并执行安装器，默认新安装目录为 `~/.agents/skills/cine-ai-video-director`。如果存在唯一的现役安装，沿用其安装根；已有受管理旧名 `cinematic-storyboard` 的安装，会核对文件后迁移为新名。
@@ -53,7 +53,7 @@ npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-
 需要明确安装位置时，指定 Skill 的上一级目录：
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.0 -- cine-ai-video-director --skills-root "$HOME/.codex/skills"
+npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-ai-video-director --skills-root "$HOME/.codex/skills"
 ```
 
 这些路径示例使用 macOS / Linux shell；Windows 使用自己的绝对安装路径。项目材料继续保存在原项目目录，不迁入 Skill。

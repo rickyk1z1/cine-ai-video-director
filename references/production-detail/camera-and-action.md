@@ -1,6 +1,6 @@
 # 镜头与动作规范（1.2）
 
-> 本地适配自TYGG AI Film Studio v3.2.7，详细技术参考，按[加载与输出映射](../tygg-reference-map.md)使用。现有主Skill的用户选择、确认节点、已采用声音及所选实现路径优先；不继承来源中的新增授权。版本/性能数字属于来源记录或启发式，执行时核对本机。
+> 详细技术参考，按[制作技术索引](../production-reference-map.md)选择本次需要的部分。当前分镜、已有决定、采用声音和所选路线优先；技术参数应在实际工具与版本中核对。
 
 
 这份规范服务于 AI 视频参考预演。目标是让低细节 Blender 场景仍清楚表达空间、人物关系、行动原因和镜头节奏。故事推导读 [导演与剪辑](directing-story-and-editing.md)，跑动/相机路径读 [联合路线](blocking-and-camera-paths.md)，只有用户要求详细肢体时才读 [动作与表演](animation-and-performance.md)，出处见 [资料索引](research-sources.md)。
