@@ -4,7 +4,7 @@
 
 这是一个给 Codex 使用的创作 Skill，带有本地分镜工作台。你可以从一句想法开始，也可以带着剧本、图片或已有视频接着做。助手负责推敲故事和镜头、推荐模型与生成方式、准备素材和提示词；你在对话或工作台中选择方向、审阅结果，决定采用哪些内容。
 
-[功能介绍](#features) · [开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.2.3)
+[功能介绍](#features) · [开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.3.0)
 
 ![创意与规划能力：文字分镜、视觉方向、动效灵感与模型路线](docs/diagram/creative-capabilities.svg)
 
@@ -62,6 +62,8 @@
 
 它会区分文字生成、单图驱动、首尾帧、多参考、运动参考和必要预演；解释哪些镜头适合一起生成，哪些独立处理更方便控制和返修。粗构图、状态图、三维预演等按实际缺口选择，不要求全部做一遍。
 
+多个模型都能完成时，推荐会讲清本段最重要的要求、与备选的实质区别、获得可采用素材的整体成本和未确定项。官方功能支持、相近案例和实际检查结果分别作为依据；证据不足时显示“暂定推荐”，按现有素材、入口和成本继续，不强制试生成或打分排名。
+
 遇到明确控制难点时，还可以查询在线案例与提示词方法，说明借用了什么、适用条件是什么。案例热度或一次成功结果不会被当成效果保证。
 
 ### 分别写好生图提示词和视频提示词
@@ -103,7 +105,7 @@
 安装需要 **Node.js 20+**（包含 npm），工作台需要 **Python 3.10+** 和浏览器。使用公开 npm 包安装，无需 GitHub 邀请或 Git 认证。
 
 ```sh
-npx --yes cine-ai-video-director@3.2.3
+npx --yes cine-ai-video-director@3.3.0
 ```
 
 安装器会识别旧名 `cinematic-storyboard`，核对无本地修改后迁移为新名，保留原安装根；已有新名安装会直接更新。新安装默认放在 `~/.agents/skills/cine-ai-video-director`。如果发现多个现役副本，或无法判断文件是否经过本地修改，会保留原文件并说明原因。
@@ -176,6 +178,6 @@ flowchart TD
 | [模型与生成策略](references/generation-strategy.md) | 想了解为什么推荐某种输入方式或生成分组 |
 | [推进与修订规则](references/workflow-navigation.md) | 想了解局部修改怎样影响素材和下一步 |
 
-当前版本 **3.2.3** 提供公开 npm 安装入口，保留旧名称迁移、完整工作台和中文手册。详细操作以手册和实际工作台为准。
+当前版本 **3.3.0** 增加可见的模型推荐依据：比较本段要求、候选取舍、整体成本和未确定项，支持暂定推荐；旧建议和制作流程继续兼容。详细操作以手册和实际工作台为准。
 
 项目代码采用 [MIT 许可证](LICENSE)。内置视觉图鉴的[图片来源记录](assets/visual-style-atlas/atlas.json)继续保留。

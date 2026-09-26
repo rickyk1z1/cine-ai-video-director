@@ -247,7 +247,23 @@ def validate_production_path_decision(r):
 
 def validate_generation_recommendation(r):
     d=r['data']
-    if d.get('decision_type')!='generation_recommendation' or 'planning_version' not in d:return
+    if d.get('decision_type')!='generation_recommendation':return
+    basis=d.get('selection_basis')
+    if 'selection_basis' in d:
+        if not isinstance(basis,dict) or basis.get('status') not in ('supported','provisional','user_specified'):
+            raise ValueError('推荐依据须说明 supported、provisional 或 user_specified 状态')
+        priorities=basis.get('priorities')
+        if not isinstance(priorities,list) or not 1<=len(priorities)<=3 or any(not isinstance(v,str) or not v.strip() for v in priorities):
+            raise ValueError('推荐依据须列出本段一至三个主要要求')
+        if any(not isinstance(basis.get(k),str) or not basis[k].strip() for k in ('comparison','cost','uncertainty')):
+            raise ValueError('推荐依据须说明候选取舍、整体成本与未确定项；未知应如实说明')
+    evidence=d.get('method_evidence',{})
+    if isinstance(evidence,dict) and isinstance(evidence.get('sources'),list):
+        for source in evidence['sources']:
+            if isinstance(source,dict) and 'kind' in source and source['kind'] not in ('official','case','observed_result','user_report'):
+                raise ValueError('未知的模型推荐依据类型')
+    # Older recommendations stay selectable; missing comparison evidence is not a new permission gate.
+    if 'planning_version' not in d:return
     if d['planning_version']!=1:raise ValueError('不支持的生成建议版本')
     if not r['shot_ids']:raise ValueError('生成建议须关联实际镜头')
     evidence=d.get('method_evidence',{})
@@ -1053,6 +1069,12 @@ def production_markdown(doc,root,render_storyboard):
             rendered.add(r['id'])
             lines += [f'<a id="{anchor}"></a>','', '### '+r['title'],'',r['body'],'']
             if r.get('data',{}).get('decision_type')=='generation_recommendation':
+                basis=r['data'].get('selection_basis')
+                if basis:
+                    status={'supported':'推荐依据','provisional':'暂定推荐依据','user_specified':'用户指定方案依据'}[basis['status']]
+                    lines += ['**'+status+'**','', '本段重点：'+cell('；'.join(basis['priorities'])),'']
+                    for key,label in [('comparison','与备选的区别'),('cost','整体制作成本'),('uncertainty','仍未确定')]:
+                        lines += [label+'：'+cell(basis[key]),'']
                 for option in r['data'].get('options',[]):
                     lines += ['- '+cell(option.get('label') or option.get('id') or option.get('path'))+'：'+cell(' / '.join(str(option.get(k) or '') for k in ('model','platform','input_mode')))+'；'+cell(option.get('reason',''))+'；输入：'+cell(option.get('inputs',''))+'；限制：'+cell(option.get('limits','')),'']
                 evidence=r['data'].get('method_evidence',{})

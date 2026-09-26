@@ -220,6 +220,24 @@ function renderGenerationInputs(root){
  }
  root.append(section);
 }
+function recommendationLabel(data){return ({supported:'推荐',provisional:'暂定推荐',user_specified:'用户指定'})[data.selection_basis?.status]||'推荐';}
+function renderSelectionBasis(parent,data){
+ const basis=data.selection_basis;
+ if(!basis){
+  if((data.options||[]).some(option=>option.recommended))parent.append(el('p',{class:'review-note'},'这份建议尚未单独记录模型间的比较依据；已有选择保留，续做时按需要补充。'));
+  return;
+ }
+ const box=el('section',{class:'generation-route recommendation-basis','aria-label':'为什么推荐这个方案'});
+ box.append(el('h4',{},'为什么推荐这个方案'),el('span',{class:'badge'},recommendationLabel(data)));
+ const primary=(data.options||[]).find(option=>option.recommended);
+ if(primary)box.append(el('p',{},'对应主方案：'+[primary.model,primary.platform,primary.input_mode].filter(Boolean).join(' · ')));
+ if(Array.isArray(basis.priorities))box.append(el('p',{},'本段重点：'+basis.priorities.join('；')));
+ for(const [key,label] of [['comparison','与备选的区别'],['cost','整体制作成本'],['uncertainty','仍未确定']]){
+  if(basis[key])box.append(el('p',{},label+'：'+basis[key]));
+ }
+ if(data.method_evidence?.summary)box.append(el('p',{class:'review-note'},'现有依据：'+data.method_evidence.summary));
+ parent.append(box);
+}
 function renderSequencePlan(root,includeReview=true){
  const records=activeRecords(),reviews=records.filter(r=>r.data?.decision_type==='sequence_review'&&doc._record_states?.[r.id]?.status!=='excluded');
  const plans=records.filter(r=>r.data?.decision_type==='generation_recommendation'&&doc._record_states?.[r.id]?.status!=='excluded');
@@ -240,6 +258,7 @@ function renderSequencePlan(root,includeReview=true){
   const completed=Boolean(doc._sequence_receipts?.[plan.id]);
   card.append(el('h3',{},completed?'本批生成方案':'文字分镜与制作方案'),el('p',{class:'creative-text'},plan.body||''));
   if(stale)card.append(el('p',{class:'review-note'},'镜头已有调整，助手需同步受影响的生成建议；已有路线不会因此撤销。'));
+  renderSelectionBasis(card,data);
   const groups=Array.isArray(data.groups)?data.groups:[];
   if(groups.length){
    const table=el('table',{class:'generation-table'}),thead=el('thead'),tr=el('tr');
@@ -255,7 +274,7 @@ function renderSequencePlan(root,includeReview=true){
    const chosen=selected.length&&selected.every(path=>path&&path===selected[0])?selected[0]:null;
    for(const option of options.filter(x=>['direct_platform','previs_reference'].includes(x.path))){
     const route=el('article',{class:'generation-route'});route.append(el('h4',{},option.label||(option.path==='direct_platform'?'直接去平台生成':'先 Blender 预演，再平台生成')));
-    if(option.recommended)route.append(el('span',{class:'badge'},'推荐'));
+    if(option.recommended)route.append(el('span',{class:'badge'},recommendationLabel(data)));
     route.append(el('p',{},option.reason||''));if(option.tradeoff)route.append(el('p',{class:'review-note'},option.tradeoff));
     const isChosen=option.id?(plan.shot_ids||[]).every(id=>doc._current_routes?.[id]?.option_id===option.id&&doc._current_routes?.[id]?.record_id==='route-'+plan.id):chosen===option.path;
     route.append(el('p',{},[option.model,option.platform,option.input_mode].filter(Boolean).join(' · ')));
@@ -264,7 +283,7 @@ function renderSequencePlan(root,includeReview=true){
    }
    card.append(routes,el('p',{class:'review-note'},'这里记录生成方式，不会点击平台生成或消耗积分。已选择后，在对话中继续即可沿用。'));
   }else card.append(el('p',{class:'review-note'},'这里只提供随设计更新的初步建议，现在不要求选路线。'));
-  if(data.method_evidence){const evidence=el('details');evidence.append(el('summary',{},'制作依据 · '+({queried:'本轮查询',reused:'复用依据',no_match:'无匹配案例',unavailable:'来源不可用',user_specified:'用户指定'}[data.method_evidence.status]||'待核')),el('p',{},data.method_evidence.summary||''));for(const source of data.method_evidence.sources||[]){const p=el('p',{},[source.checked_at,source.applied,source.limits].filter(Boolean).join('；'));if(/^https?:\/\//i.test(source.url||''))p.append(el('a',{href:source.url,target:'_blank',rel:'noopener'},'查看来源'));evidence.append(p);}card.append(evidence);}
+  if(data.method_evidence){const evidence=el('details');evidence.append(el('summary',{},'制作依据 · '+({queried:'本轮查询',reused:'复用依据',no_match:'无匹配案例',unavailable:'来源不可用',user_specified:'用户指定'}[data.method_evidence.status]||'待核')),el('p',{},data.method_evidence.summary||''));for(const source of data.method_evidence.sources||[]){const p=el('p',{},[({official:'官方能力资料',case:'条件相近的案例',observed_result:'已检查的生成结果',user_report:'用户经验线索'})[source.kind],source.model_version,source.platform,source.checked_at,source.applied,source.limits].filter(Boolean).join('；'));if(/^https?:\/\//i.test(source.url||''))p.append(el('a',{href:source.url,target:'_blank',rel:'noopener'},'查看来源'));else if(source.url)p.append(el('span',{},' · '+source.url));evidence.append(p);}card.append(evidence);}
   block.append(card);
  }
  root.append(block);

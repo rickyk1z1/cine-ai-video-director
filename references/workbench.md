@@ -129,6 +129,26 @@ HTML只提供统一交互，联网搜索与会话创建由当前Codex会话执�
 
 路线用 `option_id` 区分，允许同为 direct_platform 的不同模型组合；旧版仅传 path 时必须唯一匹配。工作台 `/api/routes/choose` 或对话写回只保存选择，不改变提交权限；新规划选择带 `planning_only:true`，实际阶段沿 `image_stage_entry` / `video_preparation_entry` 记录。对话已确认的选择由助手直接写同一记录，不要求页面再点一次。选项应与本记录镜头范围相符，单个实际生成包不能跨互不兼容的组合。
 
+新完整主推荐补充 `data.selection_basis`，与现有 options 和 method_evidence 一起呈现，不新增阶段或审批：
+
+```json
+{
+  "selection_basis": {
+    "status": "provisional",
+    "priorities": ["本段最重要的内容要求", "当前输入或交付限制"],
+    "comparison": "说明推荐项与可行备选的实质区别；没有效果对比证据时明确说明",
+    "cost": "说明素材准备、生成、拆段及修补成本；不可核对的价格或重试成本写未知",
+    "uncertainty": "区分已知能力与尚未确认的表现，说明暂定选择的适用范围"
+  }
+}
+```
+
+这是字段说明，不能把占位内容写入制作记录。`priorities` 为一至三个主要要求，通常取两三个；`comparison/cost/uncertainty` 为简短、非空的自然语言。`supported` 表示当前取舍有匹配依据，不表示效果保证；`provisional` 表示可行候选间证据不足，暂按现有输入、入口和成本选择；`user_specified` 表示按用户已定要求执行，不伪装成模型性能比较。
+
+`method_evidence.sources[]` 可补 `kind: official|case|observed_result|user_report`，及实际 `model_version`、`platform`。原有 `url/checked_at/applied/limits` 继续保存来源引用、日期、用途和边界；已检查结果可以用实际链接、文件路径或 `record:真实结果ID` 引用，不虚构公网链接。非网页引用在工作台按文字显示，不能因此称为已查看原片。
+
+工作台将本段重点、候选取舍、整体成本、未确定项与依据摘要直接显示在方案前面，详细来源仍可折叠。导出阅览稿保留相同说明。旧记录没有 selection_basis 时正常读取和选择，只提示尚未单独记录比较依据；不为补齐这个字段撤销选择、倒退阶段或重启审查。
+
 生成分组理由与作品声音按[生成策略](generation-strategy.md)组织；无图直投记录 `review_basis:text_only`，不为界面制造图稿。`current` 同时返回 generation_plans、routes 和 workflow.scopes[].next_actions；界面与导出消费当前状态，详情按 read --record-id 读取。修订与合法跳过见[推进与修订](workflow-navigation.md)。
 
 ## 阅读文档与文件组织
