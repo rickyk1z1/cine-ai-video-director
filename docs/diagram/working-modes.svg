@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1240" role="img" aria-labelledby="title desc">
+<title id="title">两种工作方式，按制作规模选择</title>
+<desc id="desc">默认在一个会话里逐段完成制作。需要多个段落并行时，由总控统一要求和共用资产，各执行会话负责一个段落的完整制作。两种方式都保留用户决策、工作台记录和局部返修。</desc>
+<defs>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#27364b" stroke-width=".65"/></pattern>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L8 5L1 9" fill="none" stroke="#93a9c1" stroke-width="1.5"/></marker>
+</defs>
+<style>
+text{font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;fill:#f3f6fc}
+.eyebrow{font-size:19px;letter-spacing:2px;fill:#74e5ef}.title{font-size:49px;font-weight:700}
+.sub{font-size:27px;fill:#b9c8da}.head{font-size:35px;font-weight:700}.body{font-size:26px;fill:#d5dfec}
+.note{font-size:23px;fill:#adc0d2}.label{font-size:27px;font-weight:650}.tag{font-size:22px;font-weight:600}
+.line{fill:none;stroke:#93a9c1;stroke-width:2.5;marker-end:url(#arrow)}
+</style>
+<rect width="1440" height="1240" rx="26" fill="#101b2c"/><rect width="1440" height="1240" rx="26" fill="url(#grid)"/>
+<text x="48" y="58" class="eyebrow">CINE AI VIDEO DIRECTOR · WORKING MODES</text>
+<text x="48" y="122" class="title">两种工作方式，按制作规模选择</text>
+<text x="48" y="170" class="sub">你决定创意与采用结果；助手按所选分工，把每一段制作推进下去。</text>
+
+<rect x="48" y="215" width="654" height="735" rx="20" fill="#17263a" stroke="#67dce8" stroke-opacity=".65"/>
+<rect x="738" y="215" width="654" height="735" rx="20" fill="#17263a" stroke="#bca0ed" stroke-opacity=".65"/>
+<text x="78" y="263" class="tag" style="fill:#67dce8">默认推荐 · 集中沟通，逐段推进</text>
+<text x="78" y="316" class="head">单会话制作</text>
+<text x="78" y="361" class="body">适合一条短片，或能在同一对话里</text>
+<text x="78" y="399" class="body">逐段推进的内容。</text>
+<text x="768" y="263" class="tag" style="fill:#bca0ed">按需选择 · 统一要求，分段并行</text>
+<text x="768" y="316" class="head">总控＋分段并行</text>
+<text x="768" y="361" class="body">适合多个可独立制作的段落，</text>
+<text x="768" y="399" class="body">同时需要共用风格、角色或场景。</text>
+
+<rect x="78" y="436" width="594" height="106" rx="14" fill="#123e4c" stroke="#67dce8"/>
+<text x="375" y="478" class="label" text-anchor="middle">你 ↔ 当前制作会话</text>
+<text x="375" y="518" class="note" text-anchor="middle">讨论、审阅与修改，都在这里接着做</text>
+<path d="M375 544V584" class="line"/>
+<rect x="78" y="592" width="594" height="156" rx="14" fill="#0d1a29"/>
+<text x="106" y="633" class="label">段落 A：完成本段制作</text>
+<text x="106" y="677" class="note">分镜与拍法 → 必要素材 → 生成输入</text>
+<text x="106" y="716" class="note">按约定生成 → 检查结果与局部返修</text>
+<path d="M375 750V790" class="line"/>
+<rect x="78" y="798" width="594" height="65" rx="13" fill="#123e4c"/>
+<text x="375" y="840" class="label" text-anchor="middle">继续段落 B、C……</text>
+<text x="78" y="911" class="note">一个会话可以完成多段内容与多个镜头。</text>
+
+<rect x="768" y="436" width="594" height="106" rx="14" fill="#35294e" stroke="#bca0ed"/>
+<text x="1065" y="477" class="label" text-anchor="middle">你 ↔ 总控会话</text>
+<text x="1065" y="518" class="note" text-anchor="middle">划分任务 · 统一要求与资产 · 核对实际回报</text>
+<path d="M950 544V567H911V598" class="line"/>
+<path d="M1180 544V567H1219V598" class="line"/>
+<text x="1065" y="578" class="tag" text-anchor="middle" style="fill:#bca0ed">分配</text>
+<rect x="768" y="606" width="286" height="188" rx="14" fill="#0d1a29"/>
+<rect x="1076" y="606" width="286" height="188" rx="14" fill="#0d1a29"/>
+<text x="911" y="649" class="label" text-anchor="middle">执行会话 A</text>
+<text x="1219" y="649" class="label" text-anchor="middle">执行会话 B</text>
+<text x="911" y="694" class="note" text-anchor="middle">负责段落 A</text>
+<text x="1219" y="694" class="note" text-anchor="middle">负责段落 B</text>
+<text x="911" y="734" class="note" text-anchor="middle">分镜、素材、提示词</text>
+<text x="1219" y="734" class="note" text-anchor="middle">分镜、素材、提示词</text>
+<text x="911" y="772" class="note" text-anchor="middle">生成交接、检查返修</text>
+<text x="1219" y="772" class="note" text-anchor="middle">生成交接、检查返修</text>
+<path d="M911 796V816H1000V835" class="line"/>
+<path d="M1219 796V816H1130V835" class="line"/>
+<rect x="768" y="843" width="594" height="65" rx="13" fill="#35294e"/>
+<text x="1065" y="885" class="label" text-anchor="middle">结果回报总控，变更同步到受影响段落</text>
+
+<rect x="48" y="988" width="1344" height="204" rx="18" fill="#17372f" stroke="#79d7ac" stroke-opacity=".6"/>
+<text x="78" y="1034" class="label" style="fill:#91e1bd">两种方式，共用同一套制作规则</text>
+<text x="78" y="1081" class="body">工作台记录当前方案与状态；共用资产直接引用；局部修改保留其他已采用内容。</text>
+<text x="78" y="1127" class="note">在对话中选好方式，或在工作台保存后说“继续”，助手读取决定并接着执行。</text>
+<text x="78" y="1167" class="note">并行需宿主支持会话工具及你的授权；页面不会自动建会话，生成仍按原约定分工。</text>
+</svg>
