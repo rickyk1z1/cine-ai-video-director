@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1130" role="img" aria-labelledby="title desc">
+<title id="title">先把想法，变成值得拍的方案</title><desc id="desc">可以只有一个想法，也可以带着剧本、图片或已有视频开始。</desc>
+<defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#27364b" stroke-width=".65"/></pattern></defs>
+<style>text{font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;fill:#f3f6fc}.eyebrow{font-size:19px;letter-spacing:2px;fill:#74e5ef}.title{font-size:49px;font-weight:700}.sub{font-size:27px;fill:#b9c8da}.head{font-size:32px;font-weight:650}.body{font-size:26px;fill:#d5dfec}.note{font-size:23px;fill:#adc0d2}.tag{font-size:22px;font-weight:600}.sample{font-size:25px;fill:#d8e6ee}</style>
+<rect width="1440" height="1130" rx="26" fill="#101b2c"/><rect width="1440" height="1130" rx="26" fill="url(#grid)"/>
+<text x="48" y="58" class="eyebrow">CINE AI VIDEO DIRECTOR · CAPABILITIES</text>
+<text x="48" y="122" class="title">先把想法，变成值得拍的方案</text>
+<text x="48" y="169" class="sub">可以只有一个想法，也可以带着剧本、图片或已有视频开始。</text>
+<rect x="48" y="215" width="654" height="378" rx="18" fill="#17263a" stroke="#67dce8" stroke-opacity=".65"/>
+<g transform="translate(74,240)" fill="none" stroke="#67dce8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="0" y="0" width="34" height="40" rx="4"/><path d="M8 11h18M8 20h18M8 29h11"/></g>
+<text x="134" y="266" class="tag" style="fill:#67dce8">文字分镜讨论</text>
+<text x="74" y="324" class="head">不只是拆镜头，还要想清楚怎么讲</text>
+<text x="74" y="377" class="body">推敲表达重点、信息揭示和情绪变化。</text>
+<text x="74" y="415" class="body">设计构图、动作、运镜、衔接与时长；</text>
+<text x="74" y="453" class="body">解释拍法，比较有意义的方案，边讨论边改。</text>
+<rect x="72" y="510" width="606" height="58" rx="9" fill="#67dce8" fill-opacity=".10"/>
+<text x="87" y="548" class="tag">得到：完整文字分镜＋镜头设计理由</text>
+<rect x="738" y="215" width="654" height="378" rx="18" fill="#17263a" stroke="#79d7ac" stroke-opacity=".65"/>
+<g transform="translate(764,240)" fill="none" stroke="#79d7ac" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="0" y="0" width="17" height="36" rx="3"/><rect x="23" y="0" width="17" height="36" rx="3"/><path d="M4 26l9-14M27 10h9M27 17h9M27 24h9"/></g>
+<text x="824" y="266" class="tag" style="fill:#79d7ac">视觉方向确定</text>
+<text x="764" y="324" class="head">先看图、做比较，再确定整体气质</text>
+<text x="764" y="377" class="body">28 个视觉方向，53 张本地参考图。</text>
+<text x="764" y="415" class="body">比较写实、绘画、3D、定格与混合媒介；</text>
+<text x="764" y="453" class="body">组合画风、色彩、光线和调性，保存本片选择。</text>
+<rect x="762" y="510" width="606" height="58" rx="9" fill="#79d7ac" fill-opacity=".10"/>
+<text x="777" y="548" class="tag">得到：可用于后续出图与提示词的视觉约定</text>
+<rect x="48" y="622" width="654" height="378" rx="18" fill="#17263a" stroke="#c3a1f1" stroke-opacity=".65"/>
+<g transform="translate(74,647)" fill="none" stroke="#c3a1f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="0" y="3" width="42" height="32" rx="7"/><path d="M17 11l12 8-12 8zM7 42h29"/></g>
+<text x="134" y="673" class="tag" style="fill:#c3a1f1">动效灵感在线捕获</text>
+<text x="74" y="731" class="head">把难以描述的动态效果，找给你看</text>
+<text x="74" y="784" class="body">按运镜、转场、形态变化或节奏找动态案例。</text>
+<text x="74" y="822" class="body">说明该看哪段、为什么贴近、哪里不同；</text>
+<text x="74" y="860" class="body">把选中的效果特点转成当前作品的设计。</text>
+<rect x="72" y="917" width="606" height="58" rx="9" fill="#c3a1f1" fill-opacity=".10"/>
+<text x="87" y="955" class="tag">得到：参考链接／可用预览＋具体借鉴方法</text>
+<rect x="738" y="622" width="654" height="378" rx="18" fill="#17263a" stroke="#f0ba76" stroke-opacity=".65"/>
+<g transform="translate(764,647)" fill="none" stroke="#f0ba76" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<path d="M0 8h15v12h12M15 8v26h12"/><rect x="28" y="12" width="17" height="14" rx="3"/><rect x="28" y="30" width="17" height="14" rx="3"/></g>
+<text x="824" y="673" class="tag" style="fill:#f0ba76">模型与生成路线</text>
+<text x="764" y="731" class="head">根据镜头选方法，提前知道要备什么</text>
+<text x="764" y="784" class="body">一起比较模型、平台、输入方式与生成分组。</text>
+<text x="764" y="822" class="body">按需要选择文字、单图、首尾帧、多参考；</text>
+<text x="764" y="860" class="body">必要时用运动参考或预演，先复用、再补缺。</text>
+<rect x="762" y="917" width="606" height="58" rx="9" fill="#f0ba76" fill-opacity=".10"/>
+<text x="777" y="955" class="tag">得到：推荐路线＋必要素材＋理由与限制</text>
+<text x="48" y="1055" class="note">动态参考按需查找：Eyecandy · Stash · Frame Set · Good Moves · Motion Design Awards</text>
+<text x="48" y="1093" class="note">路线随内容调整；已有明确决定继续沿用，局部修改不要求重走整套流程。</text>
+</svg>

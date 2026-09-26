@@ -4,9 +4,11 @@
 
 这是一个给 Codex 使用的创作 Skill，带有本地分镜工作台。你可以从一句想法开始，也可以带着剧本、图片或已有视频接着做。助手负责推敲故事和镜头、推荐模型与生成方式、准备素材和提示词；你在对话或工作台中选择方向、审阅结果，决定采用哪些内容。
 
-![你、助手与工作台如何共同完成制作](docs/diagram/overview.svg)
+[功能介绍](#features) · [开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.2.3)
 
-[功能介绍](#features) · [开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.2.2)
+![创意与规划能力：文字分镜、视觉方向、动效灵感与模型路线](docs/diagram/creative-capabilities.svg)
+
+![提示词与制作能力：生图、视频、素材协作与局部返修](docs/diagram/production-capabilities.svg)
 
 ## 它帮你解决什么问题
 
@@ -101,7 +103,7 @@
 安装需要 **Node.js 20+**（包含 npm），工作台需要 **Python 3.10+** 和浏览器。使用公开 npm 包安装，无需 GitHub 邀请或 Git 认证。
 
 ```sh
-npx --yes cine-ai-video-director@3.2.2
+npx --yes cine-ai-video-director@3.2.3
 ```
 
 安装器会识别旧名 `cinematic-storyboard`，核对无本地修改后迁移为新名，保留原安装根；已有新名安装会直接更新。新安装默认放在 `~/.agents/skills/cine-ai-video-director`。如果发现多个现役副本，或无法判断文件是否经过本地修改，会保留原文件并说明原因。
@@ -113,6 +115,8 @@ npx --yes cine-ai-video-director@3.2.2
 你不必自己填写制作数据表。助手会根据当前需求建立或打开工作台。已有分镜或视频时，也可以直接说“继续这份分镜”或“只修这条视频的 8–12 秒”。需要自行启动页面，见[启动命令](docs/USAGE.md#commands)。
 
 ## 从想法到视频，怎样推进
+
+![你、助手与工作台如何共同完成制作](docs/diagram/overview.svg)
 
 下面是新作品的常见路径。已有材料可以直接从相应位置进入，实际不需要的环节可以跳过。
 
@@ -172,6 +176,6 @@ flowchart TD
 | [模型与生成策略](references/generation-strategy.md) | 想了解为什么推荐某种输入方式或生成分组 |
 | [推进与修订规则](references/workflow-navigation.md) | 想了解局部修改怎样影响素材和下一步 |
 
-当前版本 **3.2.2** 提供公开 npm 安装入口，保留旧名称迁移、完整工作台和中文手册。详细操作以手册和实际工作台为准。
+当前版本 **3.2.3** 提供公开 npm 安装入口，保留旧名称迁移、完整工作台和中文手册。详细操作以手册和实际工作台为准。
 
 项目代码采用 [MIT 许可证](LICENSE)。内置视觉图鉴的[图片来源记录](assets/visual-style-atlas/atlas.json)继续保留。

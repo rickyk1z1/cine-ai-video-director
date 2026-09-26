@@ -1,6 +1,6 @@
 {
   "name": "cine-ai-video-director",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "license": "MIT",
   "description": "🎬 从想法、分镜到 AI 视频素材的导演 Skill，附本地工作台与中文图文手册",
   "bin": {

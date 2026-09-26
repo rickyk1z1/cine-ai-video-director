@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1250" role="img" aria-labelledby="title desc">
+<title id="title">写出能用的提示词，把制作继续推进</title><desc id="desc">图片说明一个瞬间；视频说明怎样变化。素材、参数与正文一起交付。</desc>
+<defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#27364b" stroke-width=".65"/></pattern></defs>
+<style>text{font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;fill:#f3f6fc}.eyebrow{font-size:19px;letter-spacing:2px;fill:#74e5ef}.title{font-size:49px;font-weight:700}.sub{font-size:27px;fill:#b9c8da}.head{font-size:32px;font-weight:650}.body{font-size:26px;fill:#d5dfec}.note{font-size:23px;fill:#adc0d2}.tag{font-size:22px;font-weight:600}.sample{font-size:25px;fill:#d8e6ee}</style>
+<rect width="1440" height="1250" rx="26" fill="#101b2c"/><rect width="1440" height="1250" rx="26" fill="url(#grid)"/>
+<text x="48" y="58" class="eyebrow">CINE AI VIDEO DIRECTOR · CAPABILITIES</text>
+<text x="48" y="122" class="title">写出能用的提示词，把制作继续推进</text>
+<text x="48" y="169" class="sub">图片说明一个瞬间；视频说明怎样变化。素材、参数与正文一起交付。</text>
+<rect x="48" y="215" width="654" height="603" rx="18" fill="#17263a" stroke="#67dce8" stroke-opacity=".65"/>
+<text x="75" y="260" class="tag" style="fill:#67dce8">生图提示词</text>
+<text x="75" y="313" class="head">把画面关系和关键状态写清楚</text>
+<text x="75" y="357" class="note">主体与参考 · 构图景别 · 光线材质 · 必要状态</text>
+<rect x="72" y="384" width="606" height="288" rx="12" fill="#0d1a29"/>
+<text x="91" y="423" class="note">简化写法示例 · 未做生成验证</text>
+<text x="91" y="471" class="sample">固定俯视，浅色木桌右侧放一只红色纸鸟，</text>
+<text x="91" y="514" class="sample">折痕清晰，双翼尚未展开，左侧保持留白。</text>
+<text x="91" y="557" class="sample">窗外柔和日光从左侧照入，</text>
+<text x="91" y="600" class="sample">呈现哑光纸张与自然的接触阴影。</text>
+<text x="75" y="719" class="body">已有参考：明确沿用什么，只改变什么。</text>
+<text x="75" y="760" class="body">交付：可审阅的画面说明与生图输入。</text>
+<rect x="738" y="215" width="654" height="603" rx="18" fill="#17263a" stroke="#79d7ac" stroke-opacity=".65"/>
+<text x="765" y="260" class="tag" style="fill:#79d7ac">视频提示词</text>
+<text x="765" y="313" class="head">把动作因果和摄影关系连起来</text>
+<text x="765" y="357" class="note">参考职责 · 连续动作 · 运镜关系 · 结果与声音</text>
+<rect x="762" y="384" width="606" height="288" rx="12" fill="#0d1a29"/>
+<text x="781" y="423" class="note">简化写法示例 · 未做生成验证</text>
+<text x="781" y="471" class="sample">沿用起始图的纸鸟、桌面和光线。</text>
+<text x="781" y="514" class="sample">折翼先轻微张合，再展开振翅，离桌飞起；</text>
+<text x="781" y="557" class="sample">保持固定俯视，沿右侧弧线飞出画面。</text>
+<text x="781" y="600" class="sample">纸翼明暗随转动变化，桌面阴影逐渐变淡。</text>
+<text x="765" y="719" class="body">自然动作留有空间，重要节拍明确约束。</text>
+<text x="765" y="760" class="body">交付：正文、引用素材、参数与声音安排。</text>
+<rect x="48" y="847" width="654" height="302" rx="18" fill="#17263a" stroke="#c3a1f1" stroke-opacity=".65"/>
+<text x="75" y="891" class="tag" style="fill:#c3a1f1">资产一致性与工作台</text>
+<text x="75" y="937" class="head">把当前采用的内容放在一起</text>
+<text x="75" y="984" class="note">复用角色、场景和道具，必要时先确定母图。</text>
+<text x="75" y="1020" class="note">区分候选、已采用与需复核；查看图序和实际引用。</text>
+<text x="75" y="1056" class="note">在页面编辑或选择，保存后回到对话继续。</text>
+<text x="75" y="1120" class="tag">采用版本可查，生成输入不混用</text>
+<rect x="738" y="847" width="654" height="302" rx="18" fill="#17263a" stroke="#f0ba76" stroke-opacity=".65"/>
+<text x="765" y="891" class="tag" style="fill:#f0ba76">结果检查与局部返修</text>
+<text x="765" y="937" class="head">找到具体问题，保留满意部分</text>
+<text x="765" y="984" class="note">结合真实画面、声音、提示词与参考输入定位问题。</text>
+<text x="765" y="1020" class="note">调整受影响镜头，补接点，交代替换区间。</text>
+<text x="765" y="1056" class="note">同步必要文字和素材，保留其他内容与制作进度。</text>
+<text x="765" y="1120" class="tag">准备、提交、下载、检查、采用分别记录</text>
+<text x="48" y="1197" class="note">提示词按具体模型、入口与已定声音方案适配；平台写入和生成依赖可用工具、账号与授权。</text>
+</svg>
