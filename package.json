@@ -1,8 +1,7 @@
 {
   "name": "cine-ai-video-director",
-  "version": "3.2.1",
-  "private": true,
-  "license": "UNLICENSED",
+  "version": "3.2.2",
+  "license": "MIT",
   "description": "🎬 从想法、分镜到 AI 视频素材的导演 Skill，附本地工作台与中文图文手册",
   "bin": {
     "cine-ai-video-director": "bin/install.cjs"
@@ -20,7 +19,8 @@
     "docs/",
     "!**/__pycache__/**",
     "!**/*.pyc",
-    "!**/.DS_Store"
+    "!**/.DS_Store",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=20"
@@ -39,5 +39,8 @@
     "ai-video",
     "storyboard",
     "video-director"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

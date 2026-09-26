@@ -4,7 +4,7 @@
 
 **最常见的用法是：在对话里提出需求，在工作台里看方案和素材，保存选择后回到对话说“继续”。** 助手读取当前状态，完成已经约定的下一步。你不用自己维护内部数据字段，也不用为了继续工作反复确认相同决定。
 
-[安装与准备](#setup) · [制作流程](#process) · [只有想法的例子](#example) · [工作台布局与操作](#workbench) · [修改与返修](#revision) · [启动命令](#commands) · [常见问题](#faq)
+[功能介绍与提示词示例](../README.md#features) · [安装与准备](#setup) · [制作流程](#process) · [只有想法的例子](#example) · [工作台布局与操作](#workbench) · [修改与返修](#revision) · [启动命令](#commands) · [常见问题](#faq)
 
 <a id="setup"></a>
 ## 1. 安装与准备
@@ -14,7 +14,7 @@
 | 项目 | 什么时候需要 |
 | --- | --- |
 | 能加载本地 Skill 的 Codex 环境 | 使用这套助手制作流程 |
-| Node.js 20+、能访问本私有仓库的 Git | 使用随包安装器安装或更新 |
+| Node.js 20+（包含 npm） | 使用随包安装器安装或更新 |
 | Python 3.10+、浏览器 | 启动和使用本地工作台 |
 | 相应图片、视频平台的工具与账号 | 实际生成素材；讨论分镜时不必提前接通所有平台 |
 | Pillow | 使用内置组图排版或画格提取工具时 |
@@ -27,10 +27,10 @@
 
 ### 安装或更新
 
-先确保终端中的 Git 可以访问 `rickyk1z1/cine-ai-video-director`，再执行：
+准备好 Node.js 20+ 后，直接执行公开 npm 安装命令，无需 GitHub 邀请或 Git 登录：
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-ai-video-director
+npx --yes cine-ai-video-director@3.2.2
 ```
 
 命令固定到一个已发布版本，便于不同机器使用同一套规则。安装器会输出实际安装目录：如果检测到唯一的旧名 `cinematic-storyboard` 安装，会先核对安装记录与文件，再迁移到同一安装根的新名称目录；已有新名则直接更新。全新安装默认使用 `~/.agents/skills/cine-ai-video-director`。
@@ -38,12 +38,12 @@ npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-
 若需要明确指定 Skill 的上一级目录，可以使用：
 
 ```sh
-npm exec --yes --package=github:rickyk1z1/cine-ai-video-director#v3.2.1 -- cine-ai-video-director --skills-root "$HOME/.codex/skills"
+npx --yes cine-ai-video-director@3.2.2 --skills-root "$HOME/.codex/skills"
 ```
 
 不要同时维护新旧名称的两份现役 Skill。旧安装有本地改动或缺少可核对的安装记录时，安装器会保留它并停止，不会直接覆盖。安装器发现多个位置或无法确认的本地修改会停止，旧文件会保留。让助手核对差异后再更新，不要通过删除目录绕过保护。
 
-分享给朋友的权限配置见[私有分享说明](SHARING.md)。
+分享给朋友时，发送仓库链接或上面的安装命令即可。
 
 安装完成后新开一个 Codex 对话；未加载到 Skill 时重启 Codex。把视频项目放在你希望长期保存资料的位置，后续继续使用同一目录。工作台数据与生成素材属于项目，不放进 Skill 安装目录。
 

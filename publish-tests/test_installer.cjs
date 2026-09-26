@@ -9,7 +9,7 @@ const { test } = require('node:test');
 
 const source = path.resolve(__dirname, '..');
 const installer = path.join(source, 'bin', 'install.cjs');
-const content = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests', 'README.md', 'docs'];
+const content = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests', 'README.md', 'docs', 'LICENSE'];
 
 function run(root) {
   return spawnSync(process.execPath, [installer, '--skills-root', root], { encoding: 'utf8' });
@@ -88,7 +88,7 @@ test('managed legacy name migrates once and keeps project data outside the Skill
   assert.equal(run(root).status, 0);
   assert.equal(fs.existsSync(old), false);
   const target = path.join(root, 'cine-ai-video-director');
-  assert.ok(fs.existsSync(path.join(target, 'docs', 'SHARING.md')));
+  assert.ok(fs.existsSync(path.join(target, 'docs', 'USAGE.md')));
   const marker = JSON.parse(fs.readFileSync(path.join(target, '.cine-ai-video-director-install.json'), 'utf8'));
   assert.equal(marker.name, 'cine-ai-video-director');
   assert.equal(fs.readFileSync(project, 'utf8'), '{"title":"My existing film"}');

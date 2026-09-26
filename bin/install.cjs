@@ -10,7 +10,7 @@ const NAME = 'cine-ai-video-director';
 const LEGACY_NAME = 'cinematic-storyboard';
 const MARKER = '.cine-ai-video-director-install.json';
 const LEGACY_MARKER = '.cinematic-storyboard-install.json';
-const CONTENT = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests', 'README.md', 'docs'];
+const CONTENT = ['SKILL.md', 'AGENTS.md', 'agents', 'assets', 'references', 'scripts', 'tests', 'README.md', 'docs', 'LICENSE'];
 const source = path.resolve(__dirname, '..');
 const version = require(path.join(source, 'package.json')).version;
 
