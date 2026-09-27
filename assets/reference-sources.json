@@ -1,7 +1,58 @@
 [
-  {"id":"eyecandy","label":"Eyecandy","domain":"eyecannndy.com","url":"https://eyecannndy.com/","use":"首查：按运镜、转场和视觉技法浏览动态示例。","priority":1},
-  {"id":"stash","label":"Stash","domain":"stashmedia.tv","url":"https://www.stashmedia.tv/archive/","use":"动态图形、动画与VFX补充；完整馆藏可能需要会员。","priority":2},
-  {"id":"frameset","label":"Frame Set","domain":"frameset.app","url":"https://frameset.app/","use":"Motions中的剪辑技法、运镜与转场；访问与套餐按本轮实际状态判断。","priority":2},
-  {"id":"goodmoves","label":"Good Moves","domain":"goodmoves.tv","url":"https://goodmoves.tv/","use":"按动画类型、风格标签和日期找动态设计作品。","priority":2},
-  {"id":"motion_design_awards","label":"Motion Design Awards","domain":"motiondesignawards.com","url":"https://www.motiondesignawards.com/","use":"低频补充：获奖动态图形整片，适合已有风格方向时比较。","priority":3}
+  {
+    "id": "eyecandy",
+    "label": "Eyecandy",
+    "domain": "eyecannndy.com",
+    "url": "https://eyecannndy.com/",
+    "use": "摄影、运镜与转场需求优先：按视觉技法浏览动态示例。",
+    "priority": 1
+  },
+  {
+    "id": "stash",
+    "label": "Stash",
+    "domain": "stashmedia.tv",
+    "url": "https://www.stashmedia.tv/archive/",
+    "use": "动态图形、动画与VFX补充；完整馆藏可能需要会员。",
+    "priority": 2
+  },
+  {
+    "id": "frameset",
+    "label": "Frame Set",
+    "domain": "frameset.app",
+    "url": "https://frameset.app/",
+    "use": "Motions中的剪辑技法、运镜与转场；访问与套餐按本轮实际状态判断。",
+    "priority": 2
+  },
+  {
+    "id": "goodmoves",
+    "label": "Good Moves",
+    "domain": "goodmoves.tv",
+    "url": "https://goodmoves.tv/",
+    "use": "按动画类型、风格标签和日期找动态设计作品。",
+    "priority": 2
+  },
+  {
+    "id": "motion_design_awards",
+    "label": "Motion Design Awards",
+    "domain": "motiondesignawards.com",
+    "url": "https://www.motiondesignawards.com/",
+    "use": "低频补充：获奖动态图形整片，适合已有风格方向时比较。",
+    "priority": 3
+  },
+  {
+    "id": "ordinary_folk",
+    "label": "Ordinary Folk",
+    "domain": "ordinaryfolk.co",
+    "url": "https://www.ordinaryfolk.co/work",
+    "use": "动态图形与动画创意：连续形变、视觉隐喻、空间展开及整体运动风格；按相关项目选择。",
+    "priority": 2
+  },
+  {
+    "id": "giant_ant",
+    "label": "Giant Ant",
+    "domain": "giantant.ca",
+    "url": "https://www.giantant.ca/work",
+    "use": "动态图形与动画创意：对象贯穿、视觉对照和叙事节奏；作品库也含广告与短片，按解释目标筛选。",
+    "priority": 2
+  }
 ]

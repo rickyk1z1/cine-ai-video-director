@@ -114,7 +114,7 @@ function renderCreativeReferences(){
  }
  const sources=el('details',{class:'reference-sources'});sources.append(el('summary',{},'限定来源与会员提示'));
  for(const source of view.sources||[])sources.append(el('p',{},(source.label||source.id)+'：'+(source.use||'')));
- sources.append(el('p',{},'Eyecandy优先，按题型选择补充站。会员或配额限制会明确告知；不自动购买，也不扩展全网。'));root.append(sources);
+ sources.append(el('p',{},'按当前摄影或动画需求选择相关来源，不逐站遍历。会员或配额限制会明确告知；不自动购买，也不扩展全网。'));root.append(sources);
 }
 async function renderStyleLibrary(){
  const host=$('style-library');

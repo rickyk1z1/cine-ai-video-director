@@ -130,8 +130,14 @@ class ReferenceSearchTests(unittest.TestCase):
                               'candidate': self.candidate(observed_at=1119)}, 1130)
         self.assertEqual(len(sessions[-1]['candidates']), 1)
 
-    def test_five_sources_and_domain_spoofs_or_other_sources_are_rejected(self):
-        self.assertEqual(len(refs.SOURCES), 5)
+    def test_catalog_sources_are_accepted_and_spoofs_or_other_sources_are_rejected(self):
+        self.assertEqual(len({s['id'] for s in refs.SOURCES}), len(refs.SOURCES))
+        for source in refs.SOURCES:
+            with self.subTest(source=source['id']):
+                sessions = self.add(self.started(), source_url=source['url'])
+                self.assertEqual(sessions[-1]['candidates'][0]['source_id'], source['id'])
+                with self.assertRaises(ValueError):
+                    self.add(self.started(), source_url='https://' + source['domain'] + '.attacker.example/')
         self.assertEqual(refs.source_for_url('https://site.frameset.app/')['id'], 'frameset')
         for url in ('https://flim.ai/', 'https://youtube.com/watch?v=x',
                     'https://eyecannndy.com.attacker.example/',

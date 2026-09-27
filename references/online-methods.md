@@ -24,4 +24,4 @@ python3 scripts/method_cases.py retests --slug '搜索返回的真实slug'
 
 2026-09-27 阅读的[小云雀创作者示范画布](https://www.xiaoyunque.com/home?from_page=xiaoyunque_landing_page&tab_name=home&work_id=2)展示了将角色、表情、道具、场景引用，与摄影和连续动作结合的方式，也有分段时间脚本。学习稳定设定与本段变化的分工、动作伴随变化和环境后果；不将案例正文、人物、声音或时间密度固化为默认模板。只读节点不等于核实历史提交与全部成片质量。
 
-视觉灵感检索仍按 creative-references.md 的既有来源与预算；这里是制作方法查询，不套用那五站的来源限制，也不触发另一次找灵感确认。
+视觉灵感检索仍按 creative-references.md 的既有来源与预算；这里是制作方法查询，不套用创意参考目录的来源限制，也不触发另一次找灵感确认。

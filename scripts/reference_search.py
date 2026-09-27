@@ -78,7 +78,7 @@ def source_for_url(url):
     for source in SOURCES:
         if host == source['domain'] or host.endswith('.' + source['domain']):
             return copy.deepcopy(source)
-    raise ValueError('来源页面必须属于参考白名单五站；外部媒体不能代替来源页面')
+    raise ValueError('来源页面必须属于参考来源目录；外部媒体不能代替来源页面')
 
 
 def _valid(session):
@@ -180,7 +180,7 @@ def validate(sessions):
             raise ValueError('同轮最多三个已观看且匹配的案例')
         for row in session['restrictions']:
             if not isinstance(row, dict) or row.get('source_id') not in [s['id'] for s in SOURCES]:
-                raise ValueError('访问限制必须属于五站')
+                raise ValueError('访问限制必须属于参考来源目录')
             for key in ('capability', 'reason', 'value'):
                 _text(row.get(key), key)
         for key in ('adoption_note', 'feedback'):
@@ -335,7 +335,7 @@ def apply(sessions, command, now=None):
     elif action == 'record_restriction':
         platform = command.get('source_id')
         if platform not in [s['id'] for s in SOURCES]:
-            raise ValueError('限制平台须来自五站白名单')
+            raise ValueError('限制平台须来自参考来源目录')
         row = {'source_id': platform, 'capability': _text(command.get('capability'), '受限能力'),
                'value': _text(command.get('value'), '可考虑价值'),
                'reason': _text(command.get('reason'), '限制原因')}
