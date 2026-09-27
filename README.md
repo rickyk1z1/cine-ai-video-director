@@ -4,7 +4,7 @@
 
 这是一个给 Codex 使用的创作 Skill，带有本地分镜工作台。你可以从一句想法开始，也可以带着剧本、图片或已有视频接着做。助手负责推敲故事和镜头、推荐模型与生成方式、准备素材和提示词；你在对话或工作台中选择方向、审阅结果，决定采用哪些内容。
 
-[功能介绍](#features) · [开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [已发布 npm 版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.3.0)
+[功能介绍](#features) · [开始使用](#start) · [完整中文使用手册](docs/USAGE.md) · [工作台怎么用](docs/USAGE.md#workbench) · [当前版本](https://github.com/rickyk1z1/cine-ai-video-director/releases/tag/v3.3.1)
 
 ![创意与规划能力：文字分镜、视觉方向、动效灵感与模型路线](docs/diagram/creative-capabilities.svg)
 
@@ -102,10 +102,10 @@
 <a id="start"></a>
 ## 几分钟开始使用
 
-安装需要 **Node.js 20+**（包含 npm），工作台需要 **Python 3.10+** 和浏览器。使用公开 npm 包安装，无需 GitHub 邀请或 Git 认证。GitHub 当前源码为 **3.3.1**；本次未发布 npm，下方命令仍安装已发布的 **3.3.0**，不包含本次参考来源扩充。
+安装需要 **Node.js 20+**（包含 npm），工作台需要 **Python 3.10+** 和浏览器。使用公开 npm 包安装，无需 GitHub 邀请或 Git 认证。当前版本为 **3.3.1**，包含 Ordinary Folk、Giant Ant 参考来源与按需求选站的改进。
 
 ```sh
-npx --yes cine-ai-video-director@3.3.0
+npx --yes cine-ai-video-director@3.3.1
 ```
 
 安装器会识别旧名 `cinematic-storyboard`，核对无本地修改后迁移为新名，保留原安装根；已有新名安装会直接更新。新安装默认放在 `~/.agents/skills/cine-ai-video-director`。如果发现多个现役副本，或无法判断文件是否经过本地修改，会保留原文件并说明原因。
@@ -217,6 +217,6 @@ flowchart TD
 | [模型与生成策略](references/generation-strategy.md) | 想了解为什么推荐某种输入方式或生成分组 |
 | [推进与修订规则](references/workflow-navigation.md) | 想了解局部修改怎样影响素材和下一步 |
 
-当前源码版本 **3.3.1** 扩充创意参考来源，按摄影与动画需求选站，并保留实际观看、检索预算及旧数据兼容。**3.3.0** 已加入可见的模型推荐依据：比较本段要求、候选取舍、整体成本和未确定项，支持暂定推荐；旧建议和制作流程继续兼容。详细操作以手册和实际工作台为准。
+当前版本 **3.3.1** 扩充创意参考来源，按摄影与动画需求选站，并保留实际观看、检索预算及旧数据兼容。**3.3.0** 已加入可见的模型推荐依据：比较本段要求、候选取舍、整体成本和未确定项，支持暂定推荐；旧建议和制作流程继续兼容。详细操作以手册和实际工作台为准。
 
 项目代码采用 [MIT 许可证](LICENSE)。内置视觉图鉴的[图片来源记录](assets/visual-style-atlas/atlas.json)继续保留。
