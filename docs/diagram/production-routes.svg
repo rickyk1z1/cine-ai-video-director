@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1530" role="img" aria-labelledby="title desc">
+<title id="title">直接平台生成，或先用 Blender 预演</title>
+<desc id="desc">先确定文字分镜、拍法与所需输入。直接平台路线使用文字和必要参考；Blender 路线先制作共用空间、机位与动作预演，采用后导出参考视频，结合外观参考进入平台生成。可只为部分镜头预演，静态图序审查与三维运动预演分开。</desc>
+<defs>
+<pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#27364b" stroke-width=".65"/></pattern>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M1 1L8 5L1 9" fill="none" stroke="#93a9c1" stroke-width="1.5"/></marker>
+</defs>
+<style>
+text{font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;fill:#f3f6fc}
+.eyebrow{font-size:19px;letter-spacing:2px;fill:#74e5ef}.title{font-size:49px;font-weight:700}
+.sub{font-size:27px;fill:#b9c8da}.head{font-size:34px;font-weight:700}.body{font-size:26px;fill:#d5dfec}
+.note{font-size:24px;fill:#adc0d2}.label{font-size:28px;font-weight:650}.tag{font-size:23px;font-weight:600}
+.line{fill:none;stroke:#93a9c1;stroke-width:2.5;marker-end:url(#arrow)}
+</style>
+<rect width="1440" height="1530" rx="26" fill="#101b2c"/><rect width="1440" height="1530" rx="26" fill="url(#grid)"/>
+<text x="48" y="58" class="eyebrow">CINE AI VIDEO DIRECTOR · PRODUCTION ROUTES</text>
+<text x="48" y="122" class="title">直接平台生成，或先用 Blender 预演</text>
+<text x="48" y="170" class="sub">按镜头的控制难点选路径；一部作品可以局部预演，其余镜头直接生成。</text>
+<rect x="210" y="213" width="1020" height="106" rx="18" fill="#243651" stroke="#7f9dc8"/>
+<text x="720" y="256" class="label" text-anchor="middle">一起确定文字分镜、拍法、模型平台与必要素材</text>
+<text x="720" y="297" class="note" text-anchor="middle">路线在规划时讨论，已有明确选择直接沿用</text>
+<path d="M540 321V348H375V382" class="line"/><path d="M900 321V348H1065V382" class="line"/>
+<rect x="48" y="392" width="654" height="680" rx="20" fill="#17263a" stroke="#67dce8" stroke-opacity=".65"/>
+<rect x="738" y="392" width="654" height="680" rx="20" fill="#17263a" stroke="#bca0ed" stroke-opacity=".65"/>
+<text x="78" y="440" class="tag" style="fill:#67dce8">路径 A · 文字与必要参考足够表达</text>
+<text x="78" y="492" class="head">直接在 AI 平台生成</text>
+<text x="78" y="538" class="body">适合身份、外观、起止状态等要求，</text>
+<text x="78" y="577" class="body">可由所选入口的文字与参考输入承载。</text>
+<rect x="78" y="613" width="594" height="109" rx="13" fill="#0d1a29"/>
+<text x="105" y="656" class="label">复用或补齐必要素材</text>
+<text x="105" y="697" class="note">角色、场景、首帧／首尾帧或动作参考</text>
+<path d="M375 724V759" class="line"/>
+<rect x="78" y="769" width="594" height="109" rx="13" fill="#0d1a29"/>
+<text x="105" y="812" class="label">按真实入口组织输入</text>
+<text x="105" y="853" class="note">文生、单图、多参考等，明确每份素材职责</text>
+<text x="78" y="930" class="body">现有输入足够，就直接准备生成。</text>
+<text x="78" y="973" class="note">纯文字路线可以不画分镜图。</text>
+<text x="78" y="1016" class="note">不要求先建模，也不要求上传全部审阅图。</text>
+
+<text x="768" y="440" class="tag" style="fill:#bca0ed">路径 B · 空间与运动需要具体依据</text>
+<text x="768" y="492" class="head">Blender 预演后再生成</text>
+<text x="768" y="538" class="body">适合同空间多机位、连续路线、</text>
+<text x="768" y="577" class="body">遮挡或递接等需要先验证的关系。</text>
+<rect x="768" y="613" width="594" height="109" rx="13" fill="#0d1a29"/>
+<text x="795" y="656" class="label">建立必要白模与机位</text>
+<text x="795" y="697" class="note">简化空间、人物与道具，查看静态布局</text>
+<path d="M1065 724V759" class="line"/>
+<rect x="768" y="769" width="594" height="109" rx="13" fill="#0d1a29"/>
+<text x="795" y="812" class="label">制作并观看动作与相机运动</text>
+<text x="795" y="853" class="note">检查路径、接触、遮挡与节奏，局部调整</text>
+<path d="M1065 880V915" class="line"/>
+<rect x="768" y="925" width="594" height="111" rx="13" fill="#35294e"/>
+<text x="795" y="968" class="label">采用预演，导出干净参考视频</text>
+<text x="795" y="1009" class="note">搭配角色、场景外观图；核对入口支持</text>
+<path d="M375 1074V1104H605V1134" class="line"/><path d="M1065 1074V1104H835V1134" class="line"/>
+<rect x="210" y="1144" width="1020" height="104" rx="17" fill="#17372f" stroke="#79d7ac"/>
+<text x="720" y="1187" class="label" text-anchor="middle">准确提示词＋实际参考＋平台参数 → 按约定提交生成</text>
+<text x="720" y="1227" class="note" text-anchor="middle">观看、听检真实结果 → 你决定采用或局部返修</text>
+<text x="48" y="1303" class="tag" style="fill:#91e1bd">有分镜图时：采用后做本批一次静态图序审查；它不等于 Blender 三维运动预演。</text>
+<text x="48" y="1350" class="note">Blender 提供空间、构图和运动依据，角色身份与正式外观仍由相应参考承担。</text>
+<text x="48" y="1393" class="note">预演路线需可用 Blender 工具连接，以及能接收相应参考的生成入口；效果以实际结果为准。</text>
+<text x="48" y="1436" class="note">只做本次选择的预演范围；修改更新受影响内容，生成按钮仍按已经确定的分工操作。</text>
+<text x="48" y="1479" class="note">单会话或总控并行都能使用这两条路径；工作组织与制作路线分别选择。</text>
+</svg>
