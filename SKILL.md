@@ -41,14 +41,14 @@ metadata:
 
 逐镜是否能执行，读[逐镜复核](references/shot-readiness.md)；前后是否接得上，读[连续性与图序审查](references/continuity-review.md)。看当前实际内容、机位、动作阶段、视线、对象归属与观众理解，不能用同地点、同角色或文件哈希证明衔接。相似画面要有新的观看作用；有意匹配、重复、静止、跳接和抽象表达仍允许。
 
-按问题取用专业知识，不每次全读：
+下列方法在相关内容首次设计或调整时取用，贯穿分镜规划、图稿、视频与返修，不等到写提示词或出现错误才调用。已读且仍适用的方法与已定设计持续复用；只有新内容、设计变化或具体缺口才补读相关部分，阶段切换本身不触发重读、重做或重新确认。各方法结果写入现有分镜、资产与声音记录，不另建流程或表格：
 
 | 当前问题 | 方法 |
 | --- | --- |
 | 传播主张、信息揭示、主客观视点 | [叙事](references/narrative.md) |
 | 景别、构图、透视、摄影运动 | [摄影](references/cinematography.md) |
-| 表演、走位、交互和场景动态 | [调度](references/staging.md) |
-| 镜头组、切点、快慢和声画关系 | [剪辑与声音](references/editing-sound.md) |
+| 主体位置、朝向、交互、运动或环境活动；人物内容还需意图、行为与反应 | [调度与表演](references/staging.md#跨阶段承接)；无人内容只取适用调度 |
+| 镜头组、切点、快慢和声画关系 | [剪辑与声音](references/editing-sound.md)；涉及片内人声时取[声音资产](references/voice-assets.md) |
 | 连续行走、环绕、穿梭与操作 | [连续运动](references/continuous-motion.md) |
 | 需要比较不同表达 | [原创案例](references/examples.md) |
 
@@ -70,7 +70,7 @@ metadata:
 
 ## 4. 把设计转成模型真正能用的输入
 
-写图像或视频提示词时读[提示词方法](references/prompt-constraints.md)，实际交付读[出稿协议](references/prompt-delivery-check.md)与[输入适配](references/input-adaptation.md)。人物与场景必须通过实际附件或本次文字建立，不假设模型知道内部角色名、区域编号、PPT或未来镜头。将必要制作意图转成可观察的声画要求，其余留在记录。
+写图像或视频提示词时按[提示词方法](references/prompt-constraints.md)转译当前已定的调度、表演、摄影与声音；沿上述内容路由补实际缺口，复用仍有效的已读方法。局部改图取用[图片交接](references/image-handoff.md#局部改图的写法)。直接进入本阶段也适用，不要求补做无关前期或 Blender 预演。实际交付读[出稿协议](references/prompt-delivery-check.md)与[输入适配](references/input-adaptation.md)。人物与场景通过实际附件或本次文字建立，必要制作意图转成可观察的声画要求，其余留在记录。
 
 已定声音和画面总边界放在开头。普通图片只提供所需属性，不成为逐幅到达或完整复现的关键帧；严守的首尾帧只用于已选且入口真实支持的范围。去掉边界声明再看正向正文与附件：若仍以逐图停位组织动作，修正文或参考职责。审阅图不必全部投喂。
 

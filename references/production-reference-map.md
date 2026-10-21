@@ -5,6 +5,7 @@
 | 触发条件 | 按需读取 | 输出与消费者 |
 |---|---|---|
 | 风格/节奏或导演选择困难 | [directing-story-and-editing](production-detail/directing-story-and-editing.md)、[director-plan-example](production-detail/director-plan-example.md)、[production-document-templates](production-detail/production-document-templates.md) | style/decision记录及工作台镜头，不另写可编辑分镜正文 |
+| 分镜、图稿或视频中的主体调度与人物表演 | [调度与表演](staging.md#跨阶段承接)；有人声再取[声音资产](voice-assets.md)，需要比较文戏写法再读[示例](production-detail/reference-prompt-template.md#文戏动作段示例试探与迟疑) | 现有分镜、角色设定与当前输入持续承接，不要求 Blender 或新增表格 |
 | 角色基础图、状态图或跨视角一致性 | [character-image-assets](production-detail/character-image-assets.md)、[reference-image-driven-assets](production-detail/reference-image-driven-assets.md) | asset记录、母图依赖、每镜图与提示词 |
 | 用户选择Blender，开始建立空间 | [scene-blockout-and-camera-motion](production-detail/scene-blockout-and-camera-motion.md)、[scene-semantic-detail-library](production-detail/scene-semantic-detail-library.md)、[reality-to-design-quality](production-detail/reality-to-design-quality.md)、[research-evidence-and-reality](production-detail/research-evidence-and-reality.md) | 工程计划/SceneSpec → previs记录 → 静态审查 |
 | 建筑外到内或复杂空间通行 | [commercial-architecture-blockout](production-detail/commercial-architecture-blockout.md) | 拓扑、可走区、门洞、碰撞代理与镜头位置 |
