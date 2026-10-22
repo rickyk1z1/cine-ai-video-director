@@ -1,7 +1,7 @@
 'use strict';
 // Shared shell only: Codex's native tools perform thread work and online research.
 let referenceQuery='',referenceFeedback='',referenceScope='',directiveDraft='',directiveEditId=null,directiveEditVersion=0,directiveTargets=new Set();
-let stylePanelInitialized=false,styleAtlasController=null;
+let stylePanelInitialized=false,styleAtlasController=null,styleChoiceBase=null,styleChoiceSignature='';
 
 async function workspaceCommand(command,message){
  await save();
@@ -37,10 +37,10 @@ function renderProjectOverview(){
  root.append(workspaceHeading('项目与协作','先看清内容与关联，再选择工作方式。单会话也可以一段一段推进。'));
  const modes=el('div',{class:'work-mode-grid'});
  for(const [mode,title,detail] of [['single','单会话制作','在当前会话掌握全片，按需要逐条、逐段完成。'],['coordinated','总控＋分段并行','总控统一方向和共用资料，执行会话分别完成所负责的内容。']]){
-  const card=el('article',{class:'work-mode '+(state.mode===mode?'selected':'')});card.append(el('h2',{},title),el('p',{},detail));
-  const choose=button(state.mode===mode?'当前模式':'选择此模式',()=>workspaceCommand({area:'coordination',command:{op:'set_mode',mode}},'工作模式已记录；会话建立与同步由Codex执行。'),'primary');choose.disabled=state.mode===mode;card.append(choose);modes.append(card);
+  const selected=state.mode_selected&&state.mode===mode;const card=el('article',{class:'work-mode '+(selected?'selected':'')});card.append(el('h2',{},title),el('p',{},detail));
+  const choose=button(selected?'当前模式':'选择此模式',()=>workspaceCommand({area:'coordination',command:{op:'set_mode',mode}},'工作模式已记录；会话建立与同步由Codex执行。'),'primary');choose.disabled=selected;card.append(choose);modes.append(card);
  }
- root.append(modes);
+ root.append(modes);if(!state.mode_selected)root.append(el('p',{class:'workspace-note'},'当前默认按单会话规划，尚未记录明确的工作方式选择。'));
  if(state.mode==='coordinated'){
   const info=el('section',{class:'workspace-note'});info.append(el('strong',{},state.controller?.title||state.controller_title||'项目总控'),el('p',{},state.controller?'总控会话已登记，执行条目及同步进度见下方。':'已选择并行模式，等待Codex建立或登记真实会话。'));
   root.append(info);
@@ -112,13 +112,27 @@ function renderCreativeReferences(){
    const next=button('这组不合适，换三个',async()=>{const sentFeedback=referenceFeedback;const feedbackText=referenceFeedback.trim()||'用户在工作台明确表示本组不合适，请换一组。';if(await workspaceCommand({area:'references',command:{action:'reject',session_id:current.id,feedback:feedbackText}},'已记录换组请求；下一轮会避开已否定的例子。')){if(referenceFeedback===sentFeedback)referenceFeedback='';renderCreativeReferences();}},'secondary');root.append(labeledControl('哪里不接近（可选）',feedback),next);
   }
  }
+ if(view.applications?.length){const applied=el('section',{class:'reference-round'});applied.append(el('h2',{},'已选效果的落实'));
+  for(const item of view.applications){const card=el('article',{class:'workspace-note'});card.append(el('h3',{},item.query),el('p',{},'已选特征：'+item.adoption_note),el('p',{},item.status==='applied'?'已落实到当前分镜或输入。':'待助手落实；选中参考不代表已经修改分镜或输入。'));
+   for(const target of item.applied_to||[])card.append(el('p',{},target.title+'：'+target.body));applied.append(card);}root.append(applied);}
  const sources=el('details',{class:'reference-sources'});sources.append(el('summary',{},'限定来源与会员提示'));
  for(const source of view.sources||[])sources.append(el('p',{},(source.label||source.id)+'：'+(source.use||'')));
  sources.append(el('p',{},'按当前摄影或动画需求选择相关来源，不逐站遍历。会员或配额限制会明确告知；不自动购买，也不扩展全网。'));root.append(sources);
 }
 async function renderStyleLibrary(){
  const host=$('style-library');
- if(stylePanelInitialized)return;
+ const visual=doc._visual_style||{},choice=visual.choice||doc.workspace?.style_choice||{};
+ const signature=JSON.stringify(choice),recommendations=doc.workspace?.style_recommendations?.items||[];
+ if(stylePanelInitialized){
+  if(styleAtlasController){
+   styleAtlasController.setState?.(visual);
+   styleAtlasController.setRecommendations?.(recommendations);
+   if(signature!==styleChoiceSignature&&styleAtlasController.syncChoice?.(choice)){
+    styleChoiceSignature=signature;styleChoiceBase=doc.workspace?.style_choice?.id||null;
+   }
+  }
+  return;
+ }
  stylePanelInitialized=true;
  host.replaceChildren(el('p',{class:'empty'},'正在打开视觉定调页面…'));
  try{
@@ -130,11 +144,20 @@ async function renderStyleLibrary(){
   const data=await dataResponse.json(),root=host.shadowRoot||host.attachShadow({mode:'open'});
   host.replaceChildren();root.innerHTML=template.innerHTML;
   const recommend=(new URLSearchParams(location.search).get('recommend')||'').split(',').filter(Boolean);
-  styleAtlasController=window.CinematicAtlas.mount(root,data,{assetBase:'/style-atlas/',recommend,
-   initialChoice:doc.workspace?.style_choice,
-   onSave:choice=>workspaceCommand({area:'style',choice},'视觉定调选择已保存到当前工作台。')});
+  const loadedVisual=doc._visual_style||{},loadedChoice=loadedVisual.choice||doc.workspace?.style_choice||{};
+  styleChoiceBase=doc.workspace?.style_choice?.id||null;styleChoiceSignature=JSON.stringify(loadedChoice);
+  styleAtlasController=window.CinematicAtlas.mount(root,data,{assetBase:'/style-atlas/',recommend,recommendations:doc.workspace?.style_recommendations?.items||[],state:loadedVisual,
+   initialChoice:loadedChoice,
+   onSave:async choice=>{
+    const ok=await workspaceCommand({area:'style',choice,expected_style_choice_id:styleChoiceBase},'视觉定调已保存为当前制作约定。');
+    if(ok){styleAtlasController.markSaved(choice);styleChoiceBase=doc.workspace?.style_choice?.id||null;styleChoiceSignature=JSON.stringify(doc._visual_style?.choice||{});styleAtlasController.setState(doc._visual_style);}
+    return ok;
+   },
+   onSkip:()=>workspaceCommand({area:'style',op:'skip',expected_style_choice_id:styleChoiceBase},'已记录本次跳过视觉定调。')});
  }catch(error){
   stylePanelInitialized=false;
   const target=host.shadowRoot||host;target.replaceChildren(el('p',{class:'empty'},error.message),button('重新打开视觉定调',renderStyleLibrary));
  }
 }
+
+function resetStyleLibrary(){styleAtlasController?.destroy();styleAtlasController=null;stylePanelInitialized=false;styleChoiceBase=null;styleChoiceSignature='';}

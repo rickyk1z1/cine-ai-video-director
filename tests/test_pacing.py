@@ -118,6 +118,7 @@ class PacingTests(unittest.TestCase):
     def test_timing_only_keeps_adopted_stills_but_invalidates_current_package(self):
         with tempfile.TemporaryDirectory() as directory:
             store = Store(directory); doc = store.create('', self.doc)
+            doc = store.workspace_action({'area':'style','source':'provided','selection_evidence':'OFFLINE fixture supplied product direction','choice':{'brief':'自然光下的桌面收纳夹产品展示'}}, doc['revision'])
             sid = doc['sections'][0]['id']; ids = production.shot_ids(doc['sections'][0])
             doc = store.confirm(sid, doc['revision'], 'OFFLINE fixture confirmation')
             Path(directory, 'frame.png').write_bytes(b'offline non-rendered reference fixture')

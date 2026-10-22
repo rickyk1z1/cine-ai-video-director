@@ -151,6 +151,11 @@ if(input.actions){
  click('cards',{compare:'clay'});click('cards',{compare:'flat'});element('compare').onclick();result.compareHTML=element('compareBody').innerHTML;element('closeCompare').onclick();
  api.restoreChoice({brief:'旧自定义风格说明：不要缩放人物，保留真实比例'});result.legacy=api.getChoice();
  api.restoreChoice(result.choice);result.restored=api.getChoice();
+ api.setRecommendations([{id:'paper',reason:'结构 & <层次>'},{id:'natural',reason:'实物材质'}]);element('recommended').onclick();
+ result.persistedRecommendations=element('cards').innerHTML;
+ api.markSaved(api.getChoice());result.cleanSync=api.syncChoice({base_id:'natural',brief:'对话确定的自然材质'});result.remote=api.getChoice();
+ element('projectNotes').value='用户正在输入的未保存说明';element('projectNotes').oninput();
+ result.dirtySync=api.syncChoice({base_id:'paper',brief:'其他入口的新决定'});result.local=api.getChoice();result.syncNotice=element('notice').textContent;
  api.destroy();result.listenersRemaining=listeners.size;
 }
 process.stdout.write(JSON.stringify(result));
@@ -183,6 +188,13 @@ process.stdout.write(JSON.stringify(result));
         self.assertIn('style-atlas/images/',result['detailHTML']);self.assertIn('style-atlas/images/',result['compareHTML'])
         self.assertIn('旧自定义风格说明',result['legacy']['brief']);self.assertIn('保留真实比例',result['legacy']['project_notes'])
         self.assertEqual(result['listenersRemaining'],0)
+        self.assertEqual(re.findall(r'data-detail="([^"]+)"',result['persistedRecommendations']),['paper','natural'])
+        self.assertIn('结构 &amp; &lt;层次&gt;',result['persistedRecommendations'])
+        self.assertTrue(result['cleanSync']);self.assertEqual(result['remote']['base_id'],'natural')
+        self.assertIn('对话确定的自然材质',result['remote']['project_notes'])
+        self.assertFalse(result['dirtySync']);self.assertEqual(result['local']['base_id'],'natural')
+        self.assertEqual(result['local']['project_notes'],'用户正在输入的未保存说明')
+        self.assertIn('未保存选择仍保留',result['syncNotice'])
 
     def test_full_page_template_has_no_embedded_scroller(self):
         page=self.get('/style-atlas/index.html')[0].decode()

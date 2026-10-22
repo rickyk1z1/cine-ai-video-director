@@ -411,7 +411,7 @@ function renderAdoptedAssetLibrary(root){
   }
  }
  const section=el('section',{class:'adopted-asset-library','aria-label':'已采用资产库'});
- const heading=el('div',{class:'preview-heading'});heading.append(el('h2',{},'图片资产库'),el('p',{},'已采用资产必须有明确采用记录；参考用途、状态字段和候选标记不会被当作用户采用。上方按镜展示的是生成分镜图时记录的实际输入。'));section.append(heading);
+ const heading=el('div',{class:'preview-heading'});heading.append(el('h2',{},'图片资产库'),el('p',{},'已采用资产必须有明确采用记录；参考用途、状态字段和候选标记不会被当作用户采用。上方按镜展示的是生成分镜图时记录的实际输入。在对话中说明采用哪张或需改哪里，助手会把决定写回这些记录。'));section.append(heading);
  const order=['人物','场景','道具','图形与界面','风格参考','构图参考','分镜状态图','其他资产'];
  function appendGroups(groups,{headingLabel,badgeLabel,emptyLabel,ariaLabel}){
   const block=el('div',{class:'asset-library-block'});block.append(el('h3',{class:'asset-library-heading'},headingLabel));let total=0;
@@ -443,8 +443,10 @@ function renderWorkflowStage(){
   copy.append(el('strong',{},label),el('small',{},caption));li.append(el('span',{class:'stage-marker','aria-hidden':'true'},String(index+1)),copy);list.append(li);
  });
  root.append(top,list);root.dataset.phase=String(phase);
- if(workflow.scopes?.length===1){const actions=el('ul',{'aria-label':workflow.scopes[0].title+'下一步'});for(const action of workflow.scopes[0].next_actions||[])actions.append(el('li',{},action.text));root.append(actions);}
- if(workflow.scopes?.length>1){const summary=el('details');summary.append(el('summary',{},'各段当前工作'));for(const scope of workflow.scopes){summary.append(el('p',{},scope.title+'：'+scope.status));for(const action of scope.next_actions||[])summary.append(el('p',{class:'review-note'},action.text));}root.append(summary);}
+ const next=workflow.next_actions||workflow.scopes?.flatMap(scope=>scope.next_actions||[])||[];
+ if(next.length){const details=el('details',{class:'workflow-next'});details.append(el('summary',{},'当前下一步（'+next.length+'）'));
+  const actions=el('ul',{'aria-label':'当前下一步'});for(const action of next){const row=el('li');row.append(button('查看 · '+action.text,()=>setView(action.view||'storyboard'),'workflow-action'));actions.append(row);}details.append(actions);root.append(details);}
+
 }
 
 function render(){
@@ -517,14 +519,14 @@ function renderReview(){
  const historical=suggestions.filter(s=>!pending.includes(s));if(historical.length){const history=disclosure('suggestion-history','已处理与历史建议（'+historical.length+'）','advice-history');for(const s of historical)history.append(suggestionCard(s));root.append(history);}
  // Legacy prompts remain in the document/exports for compatibility, not in this planning UI.
 }
-async function reload(){if(saving)return;if(dirty&&!confirm('重新读取会用已保存稿替换页面内容。请先导出本地草稿，确定继续？'))return;try{const result=await api('/api/document');doc=result;baseDocument=clone(result);savedRevision=doc.revision;dirty=false;blocked=false;undoDoc=null;$('undo').disabled=true;localStorage.removeItem(draftKey());notice();render();state('已保存 · 修订 '+savedRevision);}catch(e){notice('读取失败：'+e.message);}}
+async function reload(){if(saving)return;if((dirty||styleAtlasController?.isDirty())&&!confirm('重新读取会用已保存稿替换页面内容及未保存的视觉选择。请先复制或导出草稿，确定继续？'))return;try{const result=await api('/api/document');doc=result;baseDocument=clone(result);savedRevision=doc.revision;dirty=false;blocked=false;undoDoc=null;$('undo').disabled=true;localStorage.removeItem(draftKey());resetStyleLibrary();notice();render();state('已保存 · 修订 '+savedRevision);}catch(e){notice('读取失败：'+e.message);}}
 $('add-section').onclick=()=>{if(doc){setView('storyboard');mutate(()=>doc.sections.push({id:uid(),title:'新段落',notes:'',groups:[]}));}};
 document.querySelectorAll('a[href="#editor"]').forEach(link=>{link.onclick=()=>setView('storyboard');});
 $('undo').onclick=()=>{if(!undoDoc)return;const operation=undoDoc,parent=[doc,...doc.sections,...allGroups().map(x=>x.g)].find(x=>x.id===operation.parentId);if(!parent){notice('原段落或镜头组已不存在，无法在原位置撤销。');return;}parent[operation.key].splice(Math.min(operation.index,parent[operation.key].length),0,operation.item);undoDoc=null;$('undo').disabled=true;mark(true);render();};
 $('retry').onclick=()=>doc?save():start();$('reload').onclick=reload;$('draft-export').onclick=()=>{if(doc)download(JSON.stringify({base_revision:savedRevision,document:doc},null,2),'分镜-本地恢复草稿.json');};
 document.addEventListener('click',async e=>{const a=e.target.closest('a[download]');if(!a)return;e.preventDefault();await save();if(dirty||saving||blocked){notice('请先完成修改的保存，再导出已保存稿；也可以导出本地恢复草稿。');return;}try{const response=await fetch(a.getAttribute('href'),{cache:'no-store'});if(!response.ok){const problem=await response.json();throw new Error(problem.error||'服务暂时无法导出');}download(await response.text(),a.getAttribute('href').endsWith('prompts')?'生图提示词.md':'分镜阅览.md','text/markdown;charset=utf-8');}catch(error){notice('导出失败：'+error.message);}});
-window.addEventListener('beforeunload',e=>{if(dirty){persist();e.preventDefault();e.returnValue='';}});
-async function start(){try{doc=await api('/api/document');baseDocument=clone(doc);savedRevision=doc.revision;const preferred=new URLSearchParams(location.search).get('view')||sessionStorage.getItem('cinematic-view:'+doc.id);if(['project','style','references','storyboard','assets','preview'].includes(preferred))activeView=preferred;const raw=localStorage.getItem(draftKey());if(raw){try{const draft=JSON.parse(raw);if(draft.document.id===doc.id){doc=draft.document;dirty=true;version++;if(draft.base_revision!==savedRevision){blocked=true;savedRevision=draft.base_revision;notice('发现未保存草稿，但已保存稿也有更新。先导出草稿，再重新读取并合并。');}else{notice('已恢复上次未保存的草稿。检查内容后点击“重试保存”。');}}}catch(e){notice('恢复草稿无法读取，请保留浏览器数据以便检查。');}}render();state(blocked?'存在冲突 · 已恢复本地草稿':dirty?'已恢复草稿 · 待保存':'已保存 · 修订 '+savedRevision);}catch(e){notice('无法读取分镜：'+e.message);state('服务未连接');$('retry').hidden=false;}}
+window.addEventListener('beforeunload',e=>{if(dirty||styleAtlasController?.isDirty()){if(dirty)persist();e.preventDefault();e.returnValue='';}});
+async function start(){try{doc=await api('/api/document');baseDocument=clone(doc);savedRevision=doc.revision;const preferred=new URLSearchParams(location.search).get('view')||sessionStorage.getItem('cinematic-view:'+doc.id);if(['project','style','references','storyboard','assets','preview'].includes(preferred))activeView=preferred;else if(doc._visual_style&&!doc._visual_style.ready&&doc._workflow?.phase===0)activeView='style';const raw=localStorage.getItem(draftKey());if(raw){try{const draft=JSON.parse(raw);if(draft.document.id===doc.id){doc=draft.document;dirty=true;version++;if(draft.base_revision!==savedRevision){blocked=true;savedRevision=draft.base_revision;notice('发现未保存草稿，但已保存稿也有更新。先导出草稿，再重新读取并合并。');}else{notice('已恢复上次未保存的草稿。检查内容后点击“重试保存”。');}}}catch(e){notice('恢复草稿无法读取，请保留浏览器数据以便检查。');}}render();state(blocked?'存在冲突 · 已恢复本地草稿':dirty?'已恢复草稿 · 待保存':'已保存 · 修订 '+savedRevision);}catch(e){notice('无法读取分镜：'+e.message);state('服务未连接');$('retry').hidden=false;}}
 setInterval(async()=>{if(!doc||dirty||saving||blocked)return;const observed=version;try{const latest=await api('/api/document');if(!dirty&&!saving&&!blocked&&version===observed&&(latest.revision!==savedRevision||latest._view_revision!==doc._view_revision)){doc=latest;baseDocument=clone(latest);savedRevision=doc.revision;undoDoc=null;$('undo').disabled=true;renderPreservingFocus();state('已同步 · 修订 '+savedRevision);}else if(syncLost&&!dirty&&!saving&&!blocked)state('已同步 · 修订 '+savedRevision);syncLost=false;}catch(e){syncLost=true;if(!dirty&&!saving&&!blocked)$('save-state').textContent='实时同步暂不可用 · 正在重连';}},5000);
 $('navigation').addEventListener('click',()=>setView('storyboard'));
 $('find-reference').onclick=()=>{setView('references');$('reference-query')?.focus();};

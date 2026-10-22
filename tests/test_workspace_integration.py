@@ -50,7 +50,7 @@ class WorkspaceIntegrationTests(unittest.TestCase):
         self.assertEqual(self.store.path.read_bytes(),before)
     def test_style_choice_is_saved_without_fake_asset_adoption(self):
         choice={'base_id':'clay','world_id':None,'tones':['温暖治愈'],'brief':'黏土质感；人物保持正常比例','project_notes':'品牌色保持蓝绿色'}
-        doc=self.store.workspace_action({'area':'style','choice':choice},self.store.read()['revision'])
+        doc=self.store.workspace_action({'area':'style','choice':choice},self.store.read()['revision'],source='workbench')
         self.assertEqual(doc['workspace']['style_choice']['project_notes'],choice['project_notes'])
         self.assertEqual(doc.get('production',{}).get('confirmations',{}),{})
         self.assertEqual(doc['_workflow']['phase'],0)

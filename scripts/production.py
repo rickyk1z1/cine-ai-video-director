@@ -1,5 +1,6 @@
 """Confirmed production records and handoffs. No media/API submission or network I/O."""
 import copy
+import visual_style
 import hashlib
 import html
 import json
@@ -129,6 +130,56 @@ def active_records(doc):
     records=state(doc)['records']
     retired={i for r in records for i in r.get('data',{}).get('supersedes',[])}
     return [r for r in records if r['id'] not in retired]
+
+def reference_scope(doc, session):
+    scope=session.get('scope');scope=scope if isinstance(scope,dict) else {}
+    all_sections={s['id'] for s in doc['sections']}-cancelled_sections(doc)
+    section_ids=set(scope.get('section_ids',[])) | ({scope['section_id']} if scope.get('section_id') else set())
+    section_ids=(section_ids & all_sections) if section_ids else all_sections
+    selected={sid for sec in doc['sections'] if sec['id'] in section_ids for sid in shot_ids(sec)}
+    if scope.get('shot_ids'):selected &= set(scope['shot_ids'])
+    return {'section_ids':sorted(section_ids),'shot_ids':sorted(selected)}
+
+
+def reference_choice_matches(doc, record):
+    data=record.get('data',{})
+    session=next((s for s in doc.get('workspace',{}).get('reference_sessions',[])
+                  if s['id']==data.get('reference_session_id')),None)
+    return bool(session and not session.get('feedback') and session.get('chosen_candidate_id')
+                and session['chosen_candidate_id']==data.get('candidate_id')
+                and session['adoption_note']==data.get('adoption_note'))
+
+
+def reference_applications(doc, root):
+    """Derive outstanding choices from saved requests and real production records."""
+    result=[]
+    applications=[r for r in active_records(doc) if r.get('data',{}).get('decision_type')=='creative_reference_application'
+                  and record_review_status(r) not in ('excluded','candidate','revise')]
+    for session in doc.get('workspace',{}).get('reference_sessions',[]):
+        if not session.get('chosen_candidate_id') or session.get('feedback'):continue
+        scope=reference_scope(doc,session)
+        if not scope['section_ids'] and doc['sections']:continue
+        matched=[r for r in applications if r['data'].get('reference_session_id')==session['id']
+                 and reference_choice_matches(doc,r) and not is_stale(doc,r,root)]
+        result.append({'session_id':session['id'],'candidate_id':session['chosen_candidate_id'],
+            'adoption_note':session['adoption_note'],'query':session['query'],**scope,
+            'status':'applied' if matched else 'pending','record_ids':[r['id'] for r in matched],
+            'applied_to':[{'title':r['title'],'body':r['body']} for r in matched],
+            'application_required':session.get('application_required',False)})
+    return result
+
+
+def validate_reference_application(doc, r):
+    if r['data'].get('decision_type')!='creative_reference_application':return
+    if r['kind']!='decision' or not reference_choice_matches(doc,r):
+        raise ValueError('参考落实须对应实际选中的轮次、候选与采用特征')
+    if not isinstance(r['data'].get('application_evidence'),str) or not r['data']['application_evidence'].strip() or not r['body'].strip():
+        raise ValueError('参考落实须说明实际修改位置与内容，不把选择冒充落实')
+    session=next(s for s in doc['workspace']['reference_sessions'] if s['id']==r['data']['reference_session_id'])
+    scope=reference_scope(doc,session)
+    if not set(r['section_ids'])<=set(scope['section_ids']) or (r['shot_ids'] and not set(r['shot_ids'])<=set(scope['shot_ids'])):
+        raise ValueError('参考落实记录超出所选参考的范围')
+
 
 def cancelled_sections(doc):
     return {sid for r in active_records(doc) if r['kind']=='decision'
@@ -391,6 +442,7 @@ def is_stale(doc,r,root,visiting=None):
     return result
 
 def _is_stale(doc,r,root,visiting=None):
+    if r.get('data',{}).get('decision_type')=='creative_reference_application' and not reference_choice_matches(doc,r):return True
     if r.get('data',{}).get('decision_type')=='generation_recommendation' and not r['data'].get('partial_scope'):
         expected={sid for sec in doc['sections'] if sec['id'] in r['section_ids'] and sec['id'] not in cancelled_sections(doc) for sid in shot_ids(sec)}
         if expected!=set(r['shot_ids']):return True
@@ -446,13 +498,14 @@ def put_record(doc,item,root):
     for key in ('section_ids','shot_ids','depends_on'):
         if not isinstance(r[key],list) or any(not isinstance(x,str) for x in r[key]) or len(set(r[key]))!=len(r[key]):raise ValueError('关联ID无效：'+key)
     historical=r['kind'] in ('task','result')
-    if not r['section_ids'] or (not historical and any(s not in sections(doc) for s in r['section_ids'])):raise ValueError('须关联实际段落')
+    if (not r['section_ids'] and r['kind']!='style') or (not historical and any(s not in sections(doc) for s in r['section_ids'])):raise ValueError('须关联实际段落')
     available={i for sid in r['section_ids'] if sid in sections(doc) for i in shot_ids(sections(doc)[sid])}
     if not historical and not set(r['shot_ids'])<=available:raise ValueError('镜头不属于声明段落')
     if not isinstance(r['data'],dict) or not isinstance(r['files'],list):raise ValueError('data/files格式错误')
     validate_production_path_decision(r)
     validate_image_stage_decision(r)
     validate_generation_recommendation(r)
+    validate_reference_application(doc,r)
     if r['kind']=='decision' and r['data'].get('decision_type')=='sequence_review':
         data=r['data']
         if data.get('result') not in ('ready','revise') or not isinstance(data.get('summary'),str) or not data['summary'].strip():
@@ -476,6 +529,18 @@ def put_record(doc,item,root):
     if r['kind'] not in ('style','decision','task','result') and set(r['section_ids']) & cancelled_sections(doc):raise ValueError('已取消范围不能准备新的制作输入')
     p=doc.setdefault('production',copy.deepcopy(state(doc)))
     by_id={x['id']:x for x in p['records']}
+    visual=visual_style.view(doc)
+    style=by_id.get(visual['record_id'])
+    if (r['kind'] in ('asset','grid','previs','package') and visual['ready'] and style
+            and (not style['section_ids'] or set(style['section_ids']).intersection(r['section_ids']))
+            and style['id'] not in r['depends_on']):
+        r['depends_on'].append(style['id'])
+    if r['kind'] in ('previs','package'):
+        for application in reference_applications(doc,root):
+            for rid in application['record_ids']:
+                ref=by_id[rid]
+                if (set(r['shot_ids']).intersection(ref['shot_ids']) if ref['shot_ids'] else set(r['section_ids']).intersection(ref['section_ids'])) and rid not in r['depends_on']:
+                    r['depends_on'].append(rid)
     # Recording a scoped user choice does not execute media or adopt unfinished inputs.
     supersedes=r['data'].get('supersedes',[])
     if not isinstance(supersedes,list) or any(not isinstance(i,str) or i not in by_id or i==r['id'] for i in supersedes):
@@ -687,6 +752,9 @@ def package_issues(doc,r,root):
     issues=[];d=r['data'];records={x['id']:x for x in state(doc)['records']}
     if r['kind']!='package':return ['不是投产包']
     if set(r['section_ids']) & cancelled_sections(doc):issues.append('该范围已取消制作，禁止投产')
+    for application in reference_applications(doc,root):
+        if application['application_required'] and application['status']=='pending' and set(r['shot_ids']).intersection(application['shot_ids']):
+            issues.append('已选创意参考尚未落实到当前分镜或输入：'+application['query'])
     issues.extend(package_path_issues(doc,r,root,records))
     issues.extend(repair_issues(doc,r,root,records))
     if isinstance(d.get('prompt_review'),dict) and d['prompt_review'].get('review_version')==3 and d.get('review_basis','storyboard_images')!='text_only' and not d.get('repair_context'):
@@ -1181,6 +1249,9 @@ def _preview_rows(doc,root):
 
 def next_actions(doc, root, sec, phase, related, adopted):
     ids=set(shot_ids(sec));actions=[]
+    visual=visual_style.view(doc)
+    if not visual['ready']:
+        actions.append({'code':'visual_style','view':'style','text':visual['message']})
     plans=[r for r in active_records(doc) if r.get('data',{}).get('decision_type')=='generation_recommendation'
            and record_review_status(r)!='excluded' and ids.intersection(r['shot_ids'])]
     current={sid for r in plans if not is_stale(doc,r,root) for sid in r['shot_ids']}
@@ -1253,4 +1324,8 @@ def workflow_status(doc, root, rows=None):
     phase=max((s['phase'] for s in scopes),default=0)
     mixed=len({s['phase'] for s in scopes})>1
     title='各段分别推进' if mixed else scopes[0]['status'] if len(scopes)==1 else ('文字分镜','图片资产与分镜图','视频制作与返修')[phase]
-    return {'phase':phase,'title':title,'detail':'各范围的决定独立沿用，不由未完成段落阻挡其他段落。' if mixed else scopes[0]['detail'] if scopes else '从本次目标开始，复用已有输入。','scopes':scopes}
+    visual=visual_style.view(doc)
+    detail='各范围的决定独立沿用，不由未完成段落阻挡其他段落。' if mixed else scopes[0]['detail'] if scopes else '从本次目标开始，复用已有输入。'
+    if phase==0 and not visual['ready']:
+        title='视觉定调待确定';detail=visual['message']
+    return {'phase':phase,'title':title,'detail':detail,'scopes':scopes,'visual_style':visual}

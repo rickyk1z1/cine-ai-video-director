@@ -8,7 +8,7 @@ const app=fs.readFileSync(path.join(__dirname,'../assets/app.js'),'utf8');
 const helpers=app.slice(app.indexOf('function editableSnapshot('),app.indexOf('function renderPreservingFocus('));
 const workspace=fs.readFileSync(path.join(__dirname,'../assets/workspace.js'),'utf8');
 function element(tag,attrs={},text){
- return {tag,attrs,text,children:[],value:'',checked:false,style:{},classList:{toggle(){}},
+ return {tag,attrs,text,children:[],value:'',checked:false,style:{},dataset:{},classList:{toggle(){}},
   append(...nodes){this.children.push(...nodes)},replaceChildren(...nodes){this.children=[...nodes]},
   focus(){},select(){},addEventListener(){},setAttribute(key,value){this.attrs[key]=value;}};
 }
@@ -113,10 +113,41 @@ async function explicitRequestForNewReferencesNeedsNoExtraFeedback(){
  assert.equal(submitted.area,'references');assert.equal(submitted.command.action,'reject');
  assert.equal(submitted.command.session_id,'round-1');assert.ok(submitted.command.feedback.trim());
 }
+async function visualPanelRefreshesRemoteChoicesWithoutDiscardingLocalDraft(){
+ const f=fixture(),c=f.context,seen=[];let clean=true;
+ c.doc.workspace.style_choice={id:'choice-1'};
+ c.doc.workspace.style_recommendations={items:[{id:'paper',reason:'Explain structure'}]};
+ c.doc._visual_style={choice:{id:'choice-1',brief:'Remote direction'},ready:true};
+ c.controller={setState:state=>seen.push(['state',state.ready]),setRecommendations:items=>seen.push(['recommend',items[0].id]),syncChoice:choice=>{seen.push(['sync',choice.id]);return clean;}};
+ f.read('stylePanelInitialized=true;styleAtlasController=controller;');
+ await c.renderStyleLibrary();assert.equal(f.read('styleChoiceBase'),'choice-1');
+ assert.equal(seen.filter(x=>x[0]==='sync').length,1);
+ clean=false;c.doc.workspace.style_choice={id:'choice-2'};c.doc._visual_style.choice={id:'choice-2',brief:'Updated remotely'};
+ await c.renderStyleLibrary();assert.equal(f.read('styleChoiceBase'),'choice-1','dirty draft must retain its original base');
+ clean=true;await c.renderStyleLibrary();assert.equal(f.read('styleChoiceBase'),'choice-2');
+ assert.ok(seen.some(x=>x[0]==='recommend'&&x[1]==='paper'));
+}
+async function stageUsesTheSameCombinedNextActions(){
+ const f=fixture(),c=f.context;let navigated;
+ const stage=app.slice(app.indexOf('function renderWorkflowStage('),app.indexOf('function render(){'));
+ vm.runInContext(stage,c);c.setView=value=>{navigated=value;};
+ c.doc._workflow={phase:0,title:'Design',detail:'Current',scopes:[],next_actions:[{code:'reference_search',view:'references',text:'Find the requested example'},{code:'coordination_sent',view:'project',text:'Read the actual report'}]};
+ c.renderWorkflowStage();const root=f.byId('stage-status');
+ const reference=find(root,n=>n.tag==='button'&&n.text==='查看 · Find the requested example');assert.ok(reference);reference.onclick();assert.equal(navigated,'references');
+ assert.ok(find(root,n=>n.text==='查看 · Read the actual report'));
+}
+async function explicitReloadResetsStyleOnlyAfterProtectingTheDraft(){
+ const f=fixture(),c=f.context;let confirmed=0,read=0,destroyed=0;
+ c.controller={isDirty:()=>true,destroy:()=>{destroyed++;}};f.read('styleAtlasController=controller;stylePanelInitialized=true;');
+ vm.runInContext(app.slice(app.indexOf('async function reload(){'),app.indexOf("$('add-section').onclick")),c);
+ c.confirm=()=>{confirmed++;return false;};c.api=async()=>{read++;return {...structuredClone(f.initial),revision:2};};
+ await c.reload();assert.equal(confirmed,1);assert.equal(read,0);assert.equal(destroyed,0);
+ c.confirm=()=>true;await c.reload();assert.equal(read,1);assert.equal(destroyed,1);assert.equal(f.read('styleAtlasController'),null);assert.equal(c.savedRevision,2);
+}
 (async()=>{
  const tests=[pendingDocumentEditSurvivesWorkspaceSave,conflictingDocumentEditIsRetained,pendingDirectiveDraftIsRetained,
   targetOnlyChangeIsRetained,directiveEditKeepsItsOriginalVersionAfterPolling,pendingReferenceRequestIsRetained,referenceScopeOnlyChangeIsRetained,
-  pendingReferenceFeedbackIsRetained,explicitRequestForNewReferencesNeedsNoExtraFeedback];
+  pendingReferenceFeedbackIsRetained,explicitRequestForNewReferencesNeedsNoExtraFeedback,visualPanelRefreshesRemoteChoicesWithoutDiscardingLocalDraft,stageUsesTheSameCombinedNextActions,explicitReloadResetsStyleOnlyAfterProtectingTheDraft];
  let failed=0;
  for(const test of tests){try{await test();process.stdout.write('PASS '+test.name+'\n');}catch(error){failed++;console.error('FAIL '+test.name+': '+error.message);}}
  if(failed)process.exitCode=1;else process.stdout.write(tests.length+' workspace regressions passed\n');

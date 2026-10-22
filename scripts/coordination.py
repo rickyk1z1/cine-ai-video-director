@@ -41,6 +41,10 @@ def validate(state):
     try:json.dumps(state,ensure_ascii=False,allow_nan=False)
     except (TypeError,ValueError) as exc:raise ValueError('协作数据须为有效JSON') from exc
     if state.get('mode') not in ('single','coordinated'):raise ValueError('未知协作模式')
+    selection=state.get('mode_selection')
+    if selection is not None:
+        if not isinstance(selection,dict) or not isinstance(selection.get('evidence'),str):raise ValueError('工作方式选择记录格式错误')
+        _text(selection.get('selected_at'),'工作方式选择时间')
     if 'controller' not in state:raise ValueError('缺少总控登记字段')
     if state['controller'] is not None:_thread(state['controller'],'总控')
     items=state.get('work_items');directives=state.get('directives')
@@ -81,7 +85,7 @@ def apply(state,command,now=None):
     validate(state)
     if not isinstance(command,dict):raise ValueError('协作操作须为对象')
     allowed={
-        'set_mode':{'op','mode'},'set_controller':{'op','controller'},
+        'set_mode':{'op','mode','selection_evidence'},'set_controller':{'op','controller'},
         'upsert_item':{'op','item'},'upsert_directive':{'op','directive','expected_version'},
         'report':{'op','directive_id','item_id','version','status','summary','evidence','thread_id'},
     }
@@ -90,7 +94,11 @@ def apply(state,command,now=None):
     result=copy.deepcopy(state)
     timestamp=now if now is not None else datetime.now(timezone.utc).isoformat()
     _text(timestamp,'操作时间')
-    if op=='set_mode':result['mode']=command.get('mode')
+    if op=='set_mode':
+        result['mode']=command.get('mode')
+        evidence=command.get('selection_evidence','')
+        if not isinstance(evidence,str):raise ValueError('工作方式选择依据须为文字')
+        result['mode_selection']={'selected_at':timestamp,'evidence':evidence}
     elif op=='set_controller':
         if 'controller' not in command:raise ValueError('缺少总控登记；清空须明确传null')
         controller=command.get('controller')
@@ -158,6 +166,7 @@ def view(state,project_title=''):
             targets.append({'item_id':item_id,'status':status,'version':directive['version'],'receipt':copy.deepcopy(receipt)})
         directives.append({'id':directive['id'],'text':directive['text'],'version':directive['version'],
                            'item_ids':list(directive['item_ids']),'targets':targets})
-    return {'mode':state['mode'],'controller':copy.deepcopy(state['controller']),
+    return {'mode':state['mode'],'mode_selected':bool(state.get('mode_selection')) or state['mode']=='coordinated',
+            'mode_selection':copy.deepcopy(state.get('mode_selection')),'controller':copy.deepcopy(state['controller']),
             'controller_title':'总控｜'+(project_title.strip() if isinstance(project_title,str) and project_title.strip() else '项目'),
             'items':items,'directives':directives,'pending_count':pending_count}

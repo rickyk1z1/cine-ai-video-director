@@ -354,7 +354,7 @@ def apply(sessions, command, now=None):
         if item is None:
             raise ValueError('只能选择本轮匹配的参考；助手选择还须有实际观看记录')
         current.update(chosen_candidate_id=item['id'], adoption_note=_text(command.get('adoption_note'), '采用特征'),
-                       selection_by=selection_by, status='ready', stop_reason='chosen',
+                       selection_by=selection_by, application_required=True, status='ready', stop_reason='chosen',
                        stopped_at=current['stopped_at'] or _stamp(clock))
     elif action == 'reject':
         feedback = _text(command.get('feedback'), '换一组的明确反馈')

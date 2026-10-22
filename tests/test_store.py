@@ -10,6 +10,8 @@ from storyboard import Store,new_document,new_shot,Conflict,uid
 
 def fixture():
     d=new_document('测试：光的去处')
+    # Existing workflow tests exercise imported projects without the new style contract.
+    d.pop('workspace',None)
     a=new_shot();a.update(number='SH01',content='停电。\n她抬头：<script>alert(1)</script>',duration=3)
     b=new_shot();b.update(number='SH02',content='灯打开，照亮手上的陶碗。',duration=None)
     d['sections']=[dict(id=uid(),title='夜间工作',notes='',groups=[dict(id=uid(),title='从暗到明',notes='',shots=[a,b])])]

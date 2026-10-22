@@ -21,6 +21,8 @@ import rehearsal
 import coordination
 import reference_search
 import pacing
+import visual_style
+import workbench_flow
 from file_lock import exclusive_lock
 import shutil
 import subprocess
@@ -59,7 +61,7 @@ def atlas_file(name):
 def runtime_signature():
     names=['SKILL.md','scripts/storyboard.py','scripts/production.py','scripts/prompt_guard.py','scripts/rehearsal.py','scripts/file_lock.py',
            'assets/app.js','assets/workspace.js','assets/style.css','assets/index.html',
-           'scripts/coordination.py','scripts/reference_search.py','scripts/pacing.py','assets/reference-sources.json']
+           'scripts/coordination.py','scripts/reference_search.py','scripts/pacing.py','scripts/visual_style.py','scripts/workbench_flow.py','assets/reference-sources.json']
     signature=hashlib.sha256(b''.join((ROOT/name).read_bytes() for name in names))
     # Image bytes are served on demand; page, code and data changes restart the runtime.
     for name in sorted(ATLAS_FILES):
@@ -113,7 +115,7 @@ def new_shot():
 
 def new_document(title):
     return dict(schema_version=1,id=uid(),title=title,source_text='',brief='',revision=0,
-                sections=[],suggestions=[],prompts=[])
+                sections=[],suggestions=[],prompts=[],workspace={'style_choice':visual_style.initial()})
 
 def nodes(doc):
     yield doc
@@ -131,9 +133,7 @@ def validate(doc):
     if not isinstance(workspace,dict):raise ValueError('workspace须为对象')
     if 'coordination' in workspace:coordination.validate(workspace['coordination'])
     if 'reference_sessions' in workspace:reference_search.validate(workspace['reference_sessions'])
-    if 'style_choice' in workspace:
-        choice=workspace['style_choice']
-        if not isinstance(choice,dict) or not isinstance(choice.get('brief'),str):raise ValueError('视觉定调选择格式错误')
+    visual_style.validate(workspace)
     ids=set()
     def check(obj, strings, arrays=()):
         if not isinstance(obj,dict) or not isinstance(obj.get('id'),str) or not obj['id'] or obj['id'] in ids:
@@ -344,6 +344,10 @@ class Store:
         workflow=copy.deepcopy(view['_workflow'])
         if section_id is not None:
             workflow['scopes']=[scope for scope in workflow.get('scopes',[]) if scope.get('section_id')==section_id]
+            workflow['next_actions']=[action for action in workflow.get('next_actions',[]) if
+                (not action.get('section_id') or action['section_id']==section_id)
+                and (not action.get('section_ids') or section_id in action['section_ids'])
+                and (not isinstance(action.get('scope'),dict) or not action['scope'].get('section_id') or action['scope']['section_id']==section_id)]
             scope=next(iter(workflow['scopes']),None)
             workflow.update(phase=scope['phase'] if scope else 0,title=scope['status'] if scope else '范围已取消或暂无镜头',
                             detail=scope['detail'] if scope else '范围不从其他段落继承状态。')
@@ -357,8 +361,11 @@ class Store:
                 'prompts':[p for p in view.get('prompts',[]) if section_id is None or shot_ids.intersection(p.get('shot_ids',[]))],
                 'suggestions':view.get('suggestions',[]),
                 'workspace':{'style_choice':view.get('workspace',{}).get('style_choice'),
+                             'visual_style':view['_visual_style'],
+                             'style_recommendations':view.get('workspace',{}).get('style_recommendations'),
                              'coordination':view['_coordination'],
-                             'reference_request':view['_references'].get('current')},
+                             'reference_request':view['_references'].get('current'),
+                             'reference_applications':view['_references']['applications']},
                 'omitted':{'history':True,'record_data':'read --record-id ID','full_document':'read'},
                 'limits':'概览不代替完整记录、投产包校验或平台实际输入回读；候选与需复核状态按原数据保留。'}
 
@@ -387,11 +394,14 @@ class Store:
             workspace=doc.get('workspace',{})
             result['_coordination']=coordination.view(workspace.get('coordination'),doc['title'])
             result['_references']=reference_search.view(workspace.get('reference_sessions',[]))
+            result['_references']['applications']=production.reference_applications(doc,self.root)
             result['_pacing']=pacing.summary(doc)
+            result['_visual_style']=visual_style.view(doc)
             result['_preview_rows']=production.preview_rows(doc,self.root)
             result['_workflow']=production.workflow_status(doc,self.root,result['_preview_rows'])
+            result['_workflow']['next_actions']=workbench_flow.actions(doc,self.root,result['_workflow'],result['_coordination'],result['_references'],result['_visual_style'])
             result['_view_revision']=digest([result['_record_states'],result['_preview_rows'],result['_workflow'],result['_sequence_receipts'],result['_export_warning'],
-                result['_coordination'],result['_references'].get('current'),workspace.get('style_choice')])
+                result['_coordination'],result['_references'].get('current'),result['_references']['applications'],result['_visual_style']])
             return result
 
     def text(self,doc):
@@ -432,6 +442,7 @@ class Store:
         # export_hash authorizes replacement of only the previous generated Markdown.
         # If export fails, explicit export retries from the committed JSON.
         old=self._read() if self.path.exists() else None
+        visual_style.enforce_transition(old,doc)
         if old and 'production' in doc:
             dest=self.root/'分镜阅览.md'
             if not self.export_problem(old) and dest.is_file() and not dest.is_symlink():
@@ -471,7 +482,7 @@ class Store:
             doc['revision']+=1
             return self.persist(doc)
 
-    def workspace_action(self,command,expected):
+    def workspace_action(self,command,expected,source='conversation'):
         """Small shared-state actions; native Codex performs research and thread work."""
         if not isinstance(command,dict):raise ValueError('工作台操作须为对象')
         with self.lock():
@@ -479,14 +490,42 @@ class Store:
             workspace=doc.setdefault('workspace',{})
             area=command.get('area')
             if area=='coordination':
-                workspace['coordination']=coordination.apply(workspace.get('coordination',coordination.initial()),command.get('command'))
+                change=copy.deepcopy(command.get('command'))
+                if isinstance(change,dict) and change.get('op')=='set_mode' and source=='workbench':
+                    change['selection_evidence']='用户在工作台明确选择工作方式：'+str(change.get('mode'))
+                workspace['coordination']=coordination.apply(workspace.get('coordination',coordination.initial()),change)
             elif area=='references':
                 workspace['reference_sessions']=reference_search.apply(workspace.get('reference_sessions',[]),command.get('command'))
             elif area=='style':
+                if 'expected_style_choice_id' in command and command['expected_style_choice_id']!=workspace.get('style_choice',{}).get('id'):
+                    raise Conflict('视觉定调已在其他入口更新；当前未保存选择已保留，请先核对两份内容')
+                atlas=json.loads((ROOT/'assets/visual-style-atlas/atlas.json').read_text())
+                op=command.get('op','select')
+                if op=='recommend':
+                    workspace['style_recommendations']=visual_style.recommendation(command,atlas)
+                    validate(doc);doc['revision']+=1
+                    return self.persist(doc)
+                if op not in ('select','skip'):raise ValueError('未知视觉定调操作')
+                evidence=command.get('selection_evidence','')
+                origin='workbench' if source=='workbench' else command.get('source','conversation')
+                if origin not in ('workbench','conversation','provided'):raise ValueError('未知视觉定调选择来源')
+                if source!='workbench' and origin=='workbench':raise ValueError('对话写回请保留真实来源与选择依据')
+                if source=='workbench':evidence='用户在工作台明确'+('跳过本次视觉定调' if op=='skip' else '保存本次视觉定调选择')
+                if not isinstance(evidence,str) or not evidence.strip():raise ValueError('视觉定调须记录实际用户选择或跳过依据')
+                if op=='skip':
+                    old_choice=workspace.get('style_choice')
+                    if old_choice:workspace.setdefault('style_choice_history',[]).append(copy.deepcopy(old_choice))
+                    workspace['style_choice']={'contract_version':1,'id':uid(),'status':'skipped','brief':command.get('reason') or evidence,
+                        'source':origin,'selection_evidence':evidence,'selected_at':production.stamp()}
+                    validate(doc);doc['revision']+=1
+                    return self.persist(doc)
                 choice=command.get('choice')
                 if not isinstance(choice,dict) or not isinstance(choice.get('brief'),str) or not choice['brief'].strip():
                     raise ValueError('先选择或描述本次视觉方向')
-                atlas=json.loads((ROOT/'assets/visual-style-atlas/atlas.json').read_text())
+                presentation=command.get('presentation_evidence','')
+                if source=='workbench':presentation='用户在工作台视觉图鉴页面保存选择'
+                if origin=='provided':presentation=command.get('presentation_evidence') or '沿用用户明确提供的风格或参考：'+evidence
+                if not isinstance(presentation,str) or not presentation.strip():raise ValueError('对话选择须说明已展示的工作台视觉参考；已有明确风格使用provided来源')
                 cards={card['id'] for card in atlas['cards']}
                 for key in ('base_id','world_id'):
                     if choice.get(key) is not None and choice[key] not in cards:raise ValueError('未知图库条目')
@@ -496,9 +535,23 @@ class Store:
                 if not isinstance(notes,str):raise ValueError('本片定调补充须为文字')
                 old_choice=workspace.get('style_choice')
                 if old_choice:workspace.setdefault('style_choice_history',[]).append(copy.deepcopy(old_choice))
-                workspace['style_choice']={'id':uid(),'brief':choice['brief'].strip(),'project_notes':notes,'base_id':choice.get('base_id'),
+                rid=choice.get('record_id') or visual_style.view(doc).get('record_id') or 'visual-style'
+                existing=next((r for r in production.state(doc)['records'] if r['id']==rid),None)
+                if existing and existing['kind']!='style':raise ValueError('视觉定调不能覆盖其他类型的制作记录')
+                selected={'contract_version':1,'id':uid(),'brief':choice['brief'].strip(),'project_notes':notes,'base_id':choice.get('base_id'),
                     'world_id':choice.get('world_id'),'tones':tones,'selected_at':production.stamp(),
-                    'status':'selected','selection_evidence':'用户在工作台保存本次视觉定调选择'}
+                    'status':'selected','source':origin,'selection_evidence':evidence,'presentation_evidence':presentation,'record_id':rid}
+                workspace['style_choice']=selected
+                record=copy.deepcopy(existing) if existing else {'id':rid,'kind':'style','title':'当前视觉定调','section_ids':[],'shot_ids':[],'depends_on':[],'files':[],'data':{}}
+                record['body']=selected['brief']+('\n本片补充：'+notes if notes and notes not in selected['brief'] else '')
+                direction=copy.deepcopy(record['data'].get('visual_direction',{}))
+                style_ids=[x for x in (selected['base_id'],selected['world_id']) if x]
+                # Do not retain derived labels from a different selected medium or mood.
+                if direction.get('style_ids')!=style_ids:direction.pop('form',None)
+                if direction.get('tones',[])!=tones:direction.pop('mood',None)
+                direction.update(style_ids=style_ids,tones=tones)
+                record['data'].update(status='adopted',adoption_evidence=evidence,style_choice_id=selected['id'],visual_direction=direction)
+                production.put_record(doc,record,self.root)
             elif area=='pacing':
                 plan=command.get('plan')
                 before=copy.deepcopy(doc)
@@ -877,7 +930,7 @@ def serve(store,port):
                     return
                 if path=='/api/document': result=store.update(body['document'],body['expected_revision'],body.get('base_document'))
                 elif path in ('/api/transact','/api/revise'): result=store.transact(body['transaction'],body['expected_revision'],path=='/api/revise')
-                elif path=='/api/workspace': result=store.workspace_action(body['command'],body['expected_revision'])
+                elif path=='/api/workspace': result=store.workspace_action(body['command'],body['expected_revision'],source='workbench')
                 elif path=='/api/prepare': result=store.prepare(body['record'],body['expected_revision'])
                 elif path=='/api/routes/choose': result=store.choose_route(body['recommendation_id'],body.get('path'),body['expected_revision'],body.get('option_id'))
                 elif path=='/api/production/records': result=store.record(body['record'],body['expected_revision'])

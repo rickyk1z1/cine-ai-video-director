@@ -35,8 +35,9 @@ function mount(root,data,options={}){
 const D=data,byId=Object.fromEntries(D.cards.map(c=>[c.id,c])),assets=Object.fromEntries(D.assets.map(a=>[a.id,a]));
 const $=id=>root.querySelector('#'+id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const requested=options.recommend ?? new URLSearchParams(view.location.search).get('recommend')?.split(',') ?? [];
-const provided=[...new Set(requested.filter(id=>typeof id==='string'&&byId[id]))];
-const recommended=provided.length?provided.slice(0,5):D.default_recommendations;
+let provided=[...new Set(requested.filter(id=>typeof id==='string'&&byId[id]))];
+let recommended=provided.length?provided.slice(0,5):D.default_recommendations,reasons={};
+let savedChoice=null;
 let mode='recommended',form='all',base=null,world=null,tones=new Set(),comparison=new Set(),projectNotes='';
 const aliases={clay:'粘土 橡皮泥',cgtoon:'皮克斯 3D动漫 三维',anime:'日式动漫 动画 二次元',cgfantasy:'国漫 中国动漫 三维',shadow:'皮影 剪影',paper:'剪纸 纸雕 纸片'};
 function formLabel(id){return D.forms.find(f=>f.id===id)?.name||'跨形式美术方向'}
@@ -46,6 +47,18 @@ listen($('formButtons'),'click',e=>{const b=e.target.closest('[data-form]');if(!
 $('tones').innerHTML=D.moods.map(m=>`<button class="tone" data-tone="${m.name}" aria-pressed="false">${m.name}</button>`).join('');
 listen($('tones'),'click',e=>{const b=e.target.closest('[data-tone]');if(!b)return;const t=b.dataset.tone;tones.has(t)?tones.delete(t):tones.add(t);selection()});
 function imageFor(c){return assets[c.images[0]]}
+function setRecommendations(items=[]){
+ const valid=items.filter(item=>byId[item.id]);
+ reasons=Object.fromEntries(valid.map(item=>[item.id,item.reason]));
+ if(valid.length){provided=valid.map(item=>item.id);recommended=provided.slice(0,5);}
+ render();
+}
+function setState(state={}){
+ const node=$('projectState');if(!node)return;node.hidden=!state.message;
+ if(!state.message)return;node.replaceChildren();
+ const message=doc.createElement('p');message.textContent=state.message;node.append(message);
+ if(state.brief){const details=doc.createElement('details'),summary=doc.createElement('summary'),body=doc.createElement('p');summary.textContent='当前制作使用的视觉约定';body.textContent=state.brief;details.append(summary,body);node.append(details);}
+}
 function render(){
  const q=$('search').value.trim().toLowerCase();let cards=D.cards.filter(c=>(mode==='all'||recommended.includes(c.id))&&(form==='all'||(form==='world'?c.family==='world':c.compatible_forms.includes(form)))&&(!q||JSON.stringify(c).toLowerCase().includes(q)||(aliases[c.id]||'').includes(q)));
  if(mode==='recommended')cards.sort((a,b)=>recommended.indexOf(a.id)-recommended.indexOf(b.id));
@@ -54,7 +67,7 @@ function render(){
  $('formHint').textContent=D.forms.find(f=>f.id===form)?.description||(form==='world'?'这些方向可以组合在不同的呈现形式上。':'不确定形式时，先比较几种明显不同的视觉方向。');
  $('count').textContent=`当前显示 ${cards.length} 个方向`;
  $('viewNote').textContent=mode==='recommended'?(provided.length?'这组方向由传入的推荐清单指定，可随时切换到全部。':'这五种是差异明显的浏览起点。新项目中，助手会结合品牌、受众和用途重新推荐。'):'查看样图与具体边界后再选择。方向之间的区别，主要看形体、线条、材质和空间，而不只看颜色。';
- $('cards').innerHTML=cards.length?cards.map(c=>{const a=imageFor(c),selected=base===c.id||world===c.id;return `<article class="card ${selected?'selected':''}"><button class="art" data-detail="${c.id}" aria-label="查看${esc(c.name)}的全部参考与说明"><img src="${esc(assetURL(a.path))}" alt="${esc(c.name)}参考：${esc(a.source_label)}" loading="lazy"><span class="count">${c.images.length} 幅参考 · 查看</span></button><div class="info"><h2>${c.name}</h2><div class="english">${c.english}</div><p class="desc">${c.definition}</p><div class="tags">${c.family==='world'?'可叠加的世界方向':formLabel(c.family)} · ${c.suggested_moods.join(' / ')}</div><div class="actions"><button class="button ${selected?'active':''}" data-select="${c.id}" aria-pressed="${selected}">${selected?'已选方向':'选择方向'}</button><button class="button ${comparison.has(c.id)?'active':''}" data-compare="${c.id}" aria-pressed="${comparison.has(c.id)}">${comparison.has(c.id)?'取消对比':'加入对比'}</button></div></div></article>`}).join(''):'<div class="empty">没有匹配的方向。试试更宽泛的名词，或重置筛选查看全部。</div>';
+ $('cards').innerHTML=cards.length?cards.map(c=>{const a=imageFor(c),selected=base===c.id||world===c.id;return `<article class="card ${selected?'selected':''}"><button class="art" data-detail="${c.id}" aria-label="查看${esc(c.name)}的全部参考与说明"><img src="${esc(assetURL(a.path))}" alt="${esc(c.name)}参考：${esc(a.source_label)}" loading="lazy"><span class="count">${c.images.length} 幅参考 · 查看</span></button><div class="info"><h2>${c.name}</h2><div class="english">${c.english}</div><p class="desc">${c.definition}</p>${reasons[c.id]?`<p class="recommend-reason">适合本片：${esc(reasons[c.id])}</p>`:''}<div class="tags">${c.family==='world'?'可叠加的世界方向':formLabel(c.family)} · ${c.suggested_moods.join(' / ')}</div><div class="actions"><button class="button ${selected?'active':''}" data-select="${c.id}" aria-pressed="${selected}">${selected?'已选方向':'选择方向'}</button><button class="button ${comparison.has(c.id)?'active':''}" data-compare="${c.id}" aria-pressed="${comparison.has(c.id)}">${comparison.has(c.id)?'取消对比':'加入对比'}</button></div></div></article>`}).join(''):'<div class="empty">没有匹配的方向。试试更宽泛的名词，或重置筛选查看全部。</div>';
  $('compare').textContent=`对比已选（${comparison.size}）`;$('compare').disabled=comparison.size<2;
 }
 function selection(){
@@ -80,6 +93,8 @@ $('compare').onclick=()=>{$('compareBody').style.gridTemplateColumns=`repeat(${c
 $('closeDetail').onclick=()=>$('detail').close();$('closeCompare').onclick=()=>$('comparison').close();
 $('copy').onclick=async()=>{if(!$('brief').value){$('notice').textContent='先选择一个方向。';return}try{await view.navigator.clipboard.writeText($('brief').value);$('notice').textContent='定调说明已复制。'}catch{ $('brief').focus();$('brief').select();$('notice').textContent='已选中文本，请按 ⌘C 或 Ctrl+C 复制。'}};
 $('saveProject').hidden=typeof options.onSave!=='function';
+$('skipProject').hidden=typeof options.onSkip!=='function';
+$('skipProject').onclick=async()=>{if(typeof options.onSkip==='function')await options.onSkip();};
 $('projectNotes').oninput=()=>{projectNotes=$('projectNotes').value;selection();};
 function getChoice(){return {base_id:base,world_id:world,tones:[...tones],brief:$('brief').value,project_notes:projectNotes};}
 function restoreChoice(choice={}){
@@ -107,7 +122,14 @@ $('download').onclick=()=>{if(!$('brief').value){$('notice').textContent='先选
 
  for(const dialog of root.querySelectorAll('dialog'))listen(dialog,'close',unlockPage);
  if(options.initialChoice)restoreChoice(options.initialChoice);else selection();
- const api={getChoice,restoreChoice,destroy(){
+ savedChoice=JSON.stringify(getChoice());setRecommendations(options.recommendations||[]);setState(options.state);
+ const api={getChoice,restoreChoice,setRecommendations,setState,
+  isDirty(){return JSON.stringify(getChoice())!==savedChoice;},
+  markSaved(choice){savedChoice=JSON.stringify(choice);},
+  syncChoice(choice){
+   if(JSON.stringify(getChoice())!==savedChoice){$('notice').textContent='已保存方向有更新；当前未保存选择仍保留。保存前请先核对，或复制草稿后重新载入。';return false;}
+   restoreChoice(choice);savedChoice=JSON.stringify(getChoice());return true;
+  },destroy(){
   if(destroyed)return;destroyed=true;
   for(const dialog of root.querySelectorAll('dialog'))if(dialog.open)dialog.close();
   unlockPage();cleanups.forEach(clean=>clean());
