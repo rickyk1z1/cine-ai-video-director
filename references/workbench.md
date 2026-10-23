@@ -144,7 +144,7 @@ HTML只提供统一交互，联网搜索与会话创建由当前Codex会话执�
 
 用户确认图稿后，助手按[整段图序预演](sequence-review.md)完成本批一次审查。工作台支持播放已采用静帧及手动逐张查看；同镜多张状态图暂分该镜时间，不增加总时长，缺时长时不伪造节奏。它不模拟真实运动、不代表声音效果，也不启动三维或付费任务。用户可以自由重看，重看不是再次走审查流程。
 
-审查写 `decision_type: sequence_review`，以实际 `rehearse` 返回的 manifest绑定所看范围，记录真实 `summary`、`result: ready|revise` 和接点依据。两种 result 都表示本次整段审查已完成；有建议不表示流程回退。之后人工修改按 `revise` 落实并更新输入，不重新评审用户方案；原审查只对应其实际版本。
+审查写 `decision_type: sequence_review`，以实际 `rehearse` 返回的 manifest绑定所看范围，记录真实 `summary`、`result: ready|revise` 和接点依据。两种 result 都表示本次整段审查已完成；有建议不表示流程回退。之后人工修改按 `revise` 落实并更新输入，用户取舍不重审；新产生的接点按[整段审查](sequence-review.md#人工修改后的新接点)检查一次。原审查只对应其实际版本。
 
 生成建议按独立制作范围维护 `generation_recommendation`，同一ID随当前设计更新；文字阶段即可展示和选择具体组合，图稿页复用同一记录。新完整建议使用 `planning_version:1`，旧建议仍可读。不同组合或需要独立选择的范围分别建记录，不把一个全项目推荐永久套给新内容。
 
